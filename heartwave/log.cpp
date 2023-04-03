@@ -14,13 +14,13 @@ Log::Log(string idate, int ichallengeLevel, int ibreathInterval, int ilengthOfSe
 }
 
 // Getters
-Log::getDate() { return date; }
-Log::getChallengeLevel() { return challengeLevel; }
-Log::getBreathInterval() { return breathInterval; }
-Log::getLengthOfSession() { return lengthOfSession; }
-Log::getAverageCoherance() { return averageCoherance; }
-Log::getLowPercentage() { return lowPercentage; }
-Log::getMediumPercentage() { return mediumPercentage; }
-Log::getHighPercentage() { return highPercentage; }
-Log::getAchievementScore() { return achievementScore; }
+string Log::getDate() { return date; }
+int Log::getChallengeLevel() { return challengeLevel; }
+int Log::getBreathInterval() { return breathInterval; }
+int Log::getLengthOfSession() { return lengthOfSession; }
+float Log::getAverageCoherance() { return averageCoherance; }
+float Log::getLowPercentage() { return lowPercentage; }
+float Log::getMediumPercentage() { return mediumPercentage; }
+float Log::getHighPercentage() { return highPercentage; }
+float Log::getAchievementScore() { return achievementScore; }
 
