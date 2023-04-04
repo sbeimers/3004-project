@@ -15,7 +15,7 @@ public:
     int getChallengeLevel();
     void startSession();
     void update(int variability);
-    void startSession(vector<float>* dataPoints);
+    void startSession(int);
     void update();
 
     //settters

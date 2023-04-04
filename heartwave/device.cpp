@@ -1,4 +1,5 @@
 #include "device.h"
+#include "consts.h"
 
 Device::Device(){
     state = MenuState::HOME;
@@ -11,9 +12,12 @@ Device::Device(){
     recording = Recording();
 }
 
-void Device::startSession(vector<float>* dataPoints){
+void Device::startSession(int option){
     recording.reset();
-    recording.setDataPoints(dataPoints);
+    if (option == 0 ) {
+           recording.setDataPoints(&HIGH_COHERENCE_PLOT_POINTS);
+    } // add elses for med and low
+
     recording.setBreathInterval(breathPace);
     recording.setChallengeLevel(challengeLevel);
 }
@@ -36,14 +40,6 @@ float Device::getRecordingCoherenceScore(){
 
 float Device::getRecordingAchievementScore(){
     return recording.getCurrentAchievementScore();
-}
-
-void Device::changeMenuState(MenuState state){
-    this->state = state;
-}
-
-void Device::setBreathPace(int bp){
-    breathPace = bp;
 }
 
 //setters
