@@ -49,7 +49,7 @@ public:
     void update(); //called when 5 seconds have passed
 
 private:
-    vector<float> queueOfCoherenceValues;
+    vector<float> queueOfCoherenceValues; //holds 64 values only, updated every second
     vector<float> coherenceScores; //holds all coherence scores (each is calculated from the last 64 seconds), updating every 5 seconds
     vector<float> plotPoints; // Holds all y values of HR graph
     vector<float> idealPlotDiff; // Holds difference between plot points and ideal sin wave at same time

@@ -26,22 +26,6 @@ void Device::update(){
     recording.update();
 }
 
-vector<float>* Device::getCurrentRecordingDataPoints(){
-    return recording.getCurrentDataPoints();
-}
-
-int Device::getRecordingLength(){
-    return recording.getLengthOfSession();
-}
-
-float Device::getRecordingCoherenceScore(){
-    return recording.getCoherenceAverage();
-}
-
-float Device::getRecordingAchievementScore(){
-    return recording.getCurrentAchievementScore();
-}
-
 //setters
 void Device::setBreathPace(int bp){ breathPace = bp; }
 void Device::setChallengeLevel(int cl){ challengeLevel = cl; }
@@ -50,6 +34,10 @@ void Device::setChallengeLevel(int cl){ challengeLevel = cl; }
 MenuState Device::getState(){ return state; }
 int Device::getBreathPace() { return breathPace; }
 int Device::getChallengeLevel() { return challengeLevel; }
+int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
+float Device::getRecordingCoherenceScore(){ return recording.getCoherenceAverage(); }
+float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
+vector<float>* Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
 
 //power logic
 void Device::turnOn(){ turnedOn = true; } //device turn on

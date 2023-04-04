@@ -35,8 +35,6 @@ private:
     vector<string> breathPacerOptions;
     vector<string> challengeLevelOptions;
 
-//    vector<float> highCoherenceDataSet;
-
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
 

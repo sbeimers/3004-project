@@ -15,7 +15,7 @@ public:
     int getChallengeLevel();
     void startSession();
     void update(int variability);
-    void startSession(int);
+    void startSession(int option);
     void update();
 
     //settters
@@ -33,10 +33,11 @@ public:
     void changeMenuState(MenuState state);
     MenuState getState();
 
-    vector<float>* getCurrentRecordingDataPoints();
     int getRecordingLength();
     float getRecordingCoherenceScore();
     float getRecordingAchievementScore();
+
+    vector<float>* getRecordingDataPoints();
 
 private:
     vector<Log*> logs;
