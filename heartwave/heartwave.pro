@@ -28,6 +28,7 @@ HEADERS += \
     log.h \
     mainwindow.h \
     menu.h \
+    menustate.h \
     recording.h
 
 FORMS += \
