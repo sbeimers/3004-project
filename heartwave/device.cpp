@@ -11,14 +11,19 @@ Device::Device(){
     recording = Recording();
 }
 
-void Device::startSession(){
+void Device::startSession(vector<float>* dataPoints){
     recording.reset();
+    recording.setDataPoints(dataPoints);
     recording.setBreathInterval(breathPace);
     recording.setChallengeLevel(challengeLevel);
 }
 
-void Device::update(int variability){
-    recording.update(variability);
+void Device::update(){
+    recording.update();
+}
+
+vector<float>* Device::getCurrentRecordingDataPoints(){
+    return recording.getCurrentDataPoints();
 }
 
 int Device::getRecordingLength(){

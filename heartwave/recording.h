@@ -24,11 +24,13 @@ public:
     int getBreathInterval();
     int getLengthOfSession();
     float getCurrentAchievementScore();
+    vector<float>* getCurrentDataPoints();
 
     //setters
     void setChallengeLevel(int); //sets the challenge level
     void setBreathInterval(int); //sets the breath interval
     void setLengthOfSession(int); //adds to the duration of the session when called
+    void setDataPoints(vector<float>*);
 
     //coherence logic
     bool addCoherenceValue(float); //adds a new coherence value to the queue
@@ -44,13 +46,14 @@ public:
 
     void reset();
 
-    void update(int variability); //called when 5 seconds have passed
+    void update(); //called when 5 seconds have passed
 
 private:
     vector<float> queueOfCoherenceValues;
     vector<float> coherenceScores; //holds all coherence scores (each is calculated from the last 64 seconds), updating every 5 seconds
     vector<float> plotPoints; // Holds all y values of HR graph
     vector<float> idealPlotDiff; // Holds difference between plot points and ideal sin wave at same time
+    vector<float>* dataPoints;
     int challengeLevel;  // from 0-3 (ui will show level 1-4)
     int breathInterval; //holds breath interval from 0-29
     int lengthOfSession; //duration of the session

@@ -17,12 +17,13 @@ int Recording::getChallengeLevel(){ return challengeLevel; }
 int Recording::getBreathInterval(){ return breathInterval; }
 int Recording::getLengthOfSession(){ return lengthOfSession; }
 float Recording::getCurrentAchievementScore(){ return achievementScore; }
+vector<float>* Recording::getCurrentDataPoints() { return dataPoints; }
 
 //setters
 void Recording::setChallengeLevel(int challengeLevel){ this->challengeLevel = challengeLevel; }
 void Recording::setBreathInterval(int breathInterval){ this->breathInterval = breathInterval;}
 void Recording::setLengthOfSession(int duration){ this->lengthOfSession = duration; }
-
+void Recording::setDataPoints(vector<float>* dataPoints) { this->dataPoints = dataPoints; }
 
 //this function adds a new coherence value to the queueOfCoherenceValues.
 //a coherence value is indicative of 1 second passing
@@ -75,7 +76,7 @@ void Recording::reset(){
   2. getCoherenceAverage(0
   3 .getLengthOfSession()
 The device may tentatively call checkIndicator() to understand what colour the indicator needs to be */
-void Recording::update(int variability){
+void Recording::update(){
  //a tentative implementation for how coherence values could be generated to indicate the 5 seconds that have passed
     for(int i = 0; i < 5; i++){
 //        int value = generateCoherenceValue();
@@ -85,7 +86,7 @@ void Recording::update(int variability){
 //    float average = calculateCoherenceAverage(); //calculates the average of the last 64 coherence values
 //    addToCoherenceScores(average); //adds it to the queue
 //    updateAchievementScore(); //the achievement score updates
-//    setLengthOfSession(lengthOfSession + 5); //updates the duration to reflect the 5 seconds that have passed
+    setLengthOfSession(lengthOfSession + 5); //updates the duration to reflect the 5 seconds that have passed
 }
 
 int Recording::generateCoherenceValue(){

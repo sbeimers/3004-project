@@ -15,10 +15,8 @@ public:
     int getChallengeLevel();
     void startSession();
     void update(int variability);
-
-    void changeMenuState(MenuState state);
-    MenuState getState();
-
+    void startSession(vector<float>* dataPoints);
+    void update();
 
     //settters
     void setBreathPace(int bp);
@@ -35,9 +33,7 @@ public:
     void changeMenuState(MenuState state);
     MenuState getState();
 
-
-
-
+    vector<float>* getCurrentRecordingDataPoints();
     int getRecordingLength();
     float getRecordingCoherenceScore();
     float getRecordingAchievementScore();

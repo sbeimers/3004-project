@@ -30,9 +30,12 @@ private:
     QTimer* timer;
 
     vector<string> homeMenuOptions;
+    vector<string> sessionOptions;
     vector<string> settingsMenuOptions;
     vector<string> breathPacerOptions;
     vector<string> challengeLevelOptions;
+
+    vector<float> highCoherenceDataSet;
 
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
