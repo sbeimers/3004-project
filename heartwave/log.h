@@ -8,12 +8,12 @@ using namespace std;
 class Log
 {
 public:
-    Log(string date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherance, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore);
+    Log(string date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore);
     string getDate();
     int getChallengeLevel();
     int getBreathInterval();
     int getLengthOfSession();
-    float getAverageCoherance();
+    float getAverageCoherence();
     float getLowPercentage();
     float getMediumPercentage();
     float getHighPercentage();
@@ -25,12 +25,12 @@ private:
     int challengeLevel; // from 0-3 (ui will show level 1-4)
     int breathInterval; // breathinterval
     int lengthOfSession; // total length of session in seconds
-    float averageCoherance; // calculated average coherance
-    float lowPercentage; // percentage of time at low coherance
-    float mediumPercentage; // percentage of time at medium coherance
-    float highPercentage; // percentage of time at high coherance
+    float averageCoherence; // calculated average coherence
+    float lowPercentage; // percentage of time at low coherence
+    float mediumPercentage; // percentage of time at medium coherence
+    float highPercentage; // percentage of time at high coherence
     float achievementScore; // achievement score
-    // TODO: need to add vector of coherance data from recording class so we can generate the graph
+    // TODO: need to add vector of coherence data from recording class so we can generate the graph
 
     /*
     Based off of feature in specs:
