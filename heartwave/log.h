@@ -1,14 +1,16 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include <vector>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 class Log
 {
 public:
-    Log(string date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore);
+    Log(string date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore, vector<float> plotPoints);
     string getDate();
     int getChallengeLevel();
     int getBreathInterval();
@@ -18,6 +20,7 @@ public:
     float getMediumPercentage();
     float getHighPercentage();
     float getAchievementScore();
+    vector<float> getPlotPoints();
 
 
 private:
@@ -30,7 +33,7 @@ private:
     float mediumPercentage; // percentage of time at medium coherence
     float highPercentage; // percentage of time at high coherence
     float achievementScore; // achievement score
-    // TODO: need to add vector of coherence data from recording class so we can generate the graph
+    vector<float> plotPoints; //holds plot points needed to generate the graph in log summary.
 
     /*
     Based off of feature in specs:
