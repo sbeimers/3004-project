@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     homeMenuOptions = {"START NEW SESSION", "SETTINGS", "VIEW HISTORY"};
     settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATHE PACE"};
+    breathPacerOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
+    challengeLevelOptions = {"1", "2", "3", "4"};
 
     for (string s : homeMenuOptions){
         ui->menuListWidget->addItem(QString::fromStdString(s));
@@ -70,6 +72,14 @@ void MainWindow::handleSelectButtonPress(){
                 device.changeMenuState(BREATH_PACER);
                 break;
         }
+    } else if (currentState == CHALLENGE_LEVEL){
+         device.setChallengeLevel(currentRow);
+         updateMenuList(SETTINGS);
+         device.changeMenuState(SETTINGS);
+    } else if (currentState == BREATH_PACER){
+         device.setBreathPace(currentRow);
+         updateMenuList(SETTINGS);
+         device.changeMenuState(SETTINGS);
     } else if (currentState == LOGS){
         device.changeMenuState(LOG);
         displayLog(currentRow);
@@ -129,13 +139,15 @@ void MainWindow::updateMenuList(MenuState state){
         ui->menuListWidget->addItem("One must imagine a session here");
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == CHALLENGE_LEVEL){
-        // TODO: Figure out how to display challenge level change
-        ui->menuListWidget->addItem("One must imagine challenge levels here");
-        ui->menuListWidget->setCurrentRow(0);
+        for (string s : challengeLevelOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(device.getChallengeLevel());
     } else if (state == BREATH_PACER){
-        // TODO: Figure out how to display breath pacer change
-        ui->menuListWidget->addItem("One must imagine breath pacer here");
-        ui->menuListWidget->setCurrentRow(0);
+        for (string s : breathPacerOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(device.getBreathPace());
     }
 }
 
