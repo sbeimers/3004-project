@@ -20,14 +20,13 @@ SOURCES += \
     log.cpp \
     main.cpp \
     mainwindow.cpp \
-    menu.cpp \
     recording.cpp
 
 HEADERS += \
     device.h \
     log.h \
     mainwindow.h \
-    menu.h \
+    menustate.h \
     recording.h
 
 FORMS += \
