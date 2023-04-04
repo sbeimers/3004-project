@@ -296,6 +296,19 @@ border-color: black;
      <string>achievement score</string>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="heartRateGraph" native="true">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>139</y>
+      <width>256</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+   </widget>
    <zorder>graphicsView</zorder>
    <zorder>coherenceRed</zorder>
    <zorder>coherenceBlue</zorder>
@@ -314,6 +327,7 @@ border-color: black;
    <zorder>label</zorder>
    <zorder>label_2</zorder>
    <zorder>label_3</zorder>
+   <zorder>heartRateGraph</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -327,6 +341,14 @@ border-color: black;
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

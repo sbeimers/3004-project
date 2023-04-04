@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->menuListWidget->setCurrentRow(0);
 
+    ui->heartRateGraph->addGraph();
+    ui->heartRateGraph->hide();
+
+
     connect(ui->upButton, SIGNAL(released()), this, SLOT(handleUpButtonPress()));
     connect(ui->downButton, SIGNAL(released()), this, SLOT(handleDownButtonPress()));
     connect(ui->selectButton, SIGNAL(released()), this, SLOT(handleSelectButtonPress()));
@@ -26,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::update);
+    x = 0;
+    y = 0;
 }
 
 MainWindow::~MainWindow()
@@ -52,7 +58,10 @@ void MainWindow::handleSelectButtonPress(){
     if (currentState == HOME){
         switch(currentRow){
             case 0: // Start new session
-                timer->start(5000);
+                timer->start(1000);
+                ui->menuListWidget->hide();
+                ui->heartRateGraph->show();
+                ui->heartRateGraph->graph(0)->data()->clear();
                 updateMenuList(ACTIVE_SESSION);
                 device.changeMenuState(ACTIVE_SESSION);
                 break;
@@ -105,6 +114,8 @@ void MainWindow::handleBackButtonPress(){
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
         timer->stop();
+        ui->heartRateGraph->hide();
+        ui->menuListWidget->show();
         // Have to add aditional logic for ending session
         // The below is a placeholder
         updateMenuList(HOME);
@@ -116,6 +127,8 @@ void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
         timer->stop();
+        ui->heartRateGraph->hide();
+        ui->menuListWidget->show();
         // TODO: Implement logic for ending active session
     }
     updateMenuList(HOME);
@@ -173,7 +186,11 @@ void MainWindow::update(){
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
 
-    cout << recordingCoherenceScore << " " << recordingLength << " " << recordingAchievementScore << endl;
-
+//    cout << recordingCoherenceScore << " " << recordingLength << " " << recordingAchievementScore << endl;
+//    cout << "Adding points to plot" << endl;
+    ui->heartRateGraph->graph()->addData(x, rand() % 10);
+    x++;
+    ui->heartRateGraph->rescaleAxes();
+    ui->heartRateGraph->replot();
 
 }
