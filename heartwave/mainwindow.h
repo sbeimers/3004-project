@@ -29,6 +29,8 @@ private:
 
     vector<string> homeMenuOptions;
     vector<string> settingsMenuOptions;
+    vector<string> breathPacerOptions;
+    vector<string> challengeLevelOptions;
 
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
