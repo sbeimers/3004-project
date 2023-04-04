@@ -24,6 +24,7 @@ public:
     void turnOff(); // turn device off
     int getBatteryLevel(); // returns battery level
     void resetBatteryLevel();// resets battery level
+    void setBatteryLevel(int);
 
     //menu logic
     void changeMenuState(MenuState state);

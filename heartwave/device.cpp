@@ -24,6 +24,8 @@ void Device::turnOn(){ turnedOn = true; } //device turn on
 void Device::turnOff(){ turnedOn = false; } // device turn off
 int Device::getBatteryLevel(){ return batteryLevel; } // returns the battery level
 void Device::resetBatteryLevel() { batteryLevel = 100; }// changes the battery level to 100
+void Device::setBatteryLevel(int power) { batteryLevel = power; }
+
 
 //change menu state
 void Device::changeMenuState(MenuState state){ this->state = state; }
