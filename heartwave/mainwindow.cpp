@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->selectButton, SIGNAL(released()), this, SLOT(handleSelectButtonPress()));
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
     connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::update);
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +52,7 @@ void MainWindow::handleSelectButtonPress(){
     if (currentState == HOME){
         switch(currentRow){
             case 0: // Start new session
+                timer->start(5000);
                 updateMenuList(ACTIVE_SESSION);
                 device.changeMenuState(ACTIVE_SESSION);
                 break;
@@ -100,6 +104,7 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
+        timer->stop();
         // Have to add aditional logic for ending session
         // The below is a placeholder
         updateMenuList(HOME);
@@ -157,4 +162,8 @@ void MainWindow::displayLog(int logNum){
     ui->menuListWidget->clear();
     string placeHolder = "One must imagine log " + std::to_string(logNum) + " here";
     ui->menuListWidget->addItem(QString::fromStdString(placeHolder));
+}
+
+void MainWindow::update(){
+    cout<<"Print wassup"<<endl;
 }

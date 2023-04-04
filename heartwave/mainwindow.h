@@ -8,6 +8,7 @@
 
 #include "device.h"
 #include "menustate.h"
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,6 +27,7 @@ public:
 private:
     Ui::MainWindow *ui;
     Device device;
+    QTimer* timer;
 
     vector<string> homeMenuOptions;
     vector<string> settingsMenuOptions;
@@ -41,5 +43,6 @@ private slots:
     void handleSelectButtonPress();
     void handleBackButtonPress();
     void handleMenuButtonPress();
+    void update();
 };
 #endif // MAINWINDOW_H
