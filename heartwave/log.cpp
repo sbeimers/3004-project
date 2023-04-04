@@ -1,7 +1,8 @@
 #include "log.h"
 
 // ctor for log... no setters since this should never be changed after.
-Log::Log(string idate, int ichallengeLevel, int ibreathInterval, int ilengthOfSession, float iaverageCoherence, float ilowPercentage, float imediumPercentage, float ihighPercentage, float iachievementScore) {
+Log::Log(string idate, int ichallengeLevel, int ibreathInterval, int ilengthOfSession, float iaverageCoherence, float ilowPercentage, float imediumPercentage, float ihighPercentage, float iachievementScore, vector<float> iplotPoints
+         ) : plotPoints(iplotPoints) {
     date = idate;
     challengeLevel = ichallengeLevel;
     breathInterval = ibreathInterval;
@@ -23,4 +24,5 @@ float Log::getLowPercentage() { return lowPercentage; }
 float Log::getMediumPercentage() { return mediumPercentage; }
 float Log::getHighPercentage() { return highPercentage; }
 float Log::getAchievementScore() { return achievementScore; }
+vector<float> Log::getPlotPoints() { return plotPoints; }
 
