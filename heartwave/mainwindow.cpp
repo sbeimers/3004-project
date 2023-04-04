@@ -115,6 +115,7 @@ void MainWindow::handleBackButtonPress(){
 void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
+        timer->stop();
         // TODO: Implement logic for ending active session
     }
     updateMenuList(HOME);
@@ -166,4 +167,13 @@ void MainWindow::displayLog(int logNum){
 
 void MainWindow::update(){
     cout<<"Print wassup"<<endl;
+    int variability = ui->variabilityScale->value();
+    device.update(variability);
+    int recordingCoherenceScore = device.getRecordingCoherenceScore();
+    int recordingLength = device.getRecordingLength();
+    int recordingAchievementScore = device.getRecordingAchievementScore();
+
+    cout << recordingCoherenceScore << " " << recordingLength << " " << recordingAchievementScore << endl;
+
+
 }

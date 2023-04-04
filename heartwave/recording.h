@@ -15,7 +15,7 @@ using namespace std;
 class Recording
 {
 public:
-    Recording(int, int);
+    Recording(int challengeLevel = 0, int breathInterval = 9);
     ~Recording();
 
     //getters
@@ -42,7 +42,9 @@ public:
     //achievement score logic
     void updateAchievementScore(); //adds up all of the scores in the coherenceScores vector to update the achievement score attribute
 
-    bool update(); //called when 5 seconds have passed
+    void reset();
+
+    void update(int variability); //called when 5 seconds have passed
 
 private:
     vector<float> queueOfCoherenceValues;

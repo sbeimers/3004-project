@@ -1,15 +1,46 @@
 #include "device.h"
 
 Device::Device(){
-
     state = MenuState::HOME;
     breathPace = 9;
     challengeLevel = 0;
 
-
     batteryLevel = 100;// battery level
     turnedOn = false; // determins if the device is on or off
+
+    recording = Recording();
 }
+
+void Device::startSession(){
+    recording.reset();
+    recording.setBreathInterval(breathPace);
+    recording.setChallengeLevel(challengeLevel);
+}
+
+void Device::update(int variability){
+    recording.update(variability);
+}
+
+int Device::getRecordingLength(){
+    return recording.getLengthOfSession();
+}
+
+float Device::getRecordingCoherenceScore(){
+    return recording.getCoherenceAverage();
+}
+
+float Device::getRecordingAchievementScore(){
+    return recording.getCurrentAchievementScore();
+}
+
+void Device::changeMenuState(MenuState state){
+    this->state = state;
+}
+
+void Device::setBreathPace(int bp){
+    breathPace = bp;
+}
+
 //setters
 void Device::setBreathPace(int bp){ breathPace = bp; }
 void Device::setChallengeLevel(int cl){ challengeLevel = cl; }
