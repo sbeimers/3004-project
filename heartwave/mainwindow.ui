@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="coheranceRed" native="true">
+   <widget class="QWidget" name="coherenceRed" native="true">
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -33,7 +33,7 @@ border-style: solid;
 border-color: black;</string>
     </property>
    </widget>
-   <widget class="QWidget" name="coheranceBlue" native="true">
+   <widget class="QWidget" name="coherenceBlue" native="true">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -52,7 +52,7 @@ border-style: solid;
 border-color: black;</string>
     </property>
    </widget>
-   <widget class="QWidget" name="coheranceGreen" native="true">
+   <widget class="QWidget" name="coherenceGreen" native="true">
     <property name="geometry">
      <rect>
       <x>250</x>
