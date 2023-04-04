@@ -38,5 +38,6 @@ private slots:
     void handleDownButtonPress();
     void handleSelectButtonPress();
     void handleBackButtonPress();
+    void handleMenuButtonPress();
 };
 #endif // MAINWINDOW_H

@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->downButton, SIGNAL(released()), this, SLOT(handleDownButtonPress()));
     connect(ui->selectButton, SIGNAL(released()), this, SLOT(handleSelectButtonPress()));
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
+    connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
 }
 
 MainWindow::~MainWindow()
@@ -94,6 +95,15 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(HOME);
         device.changeMenuState(HOME);
     }
+}
+
+void MainWindow::handleMenuButtonPress(){
+    MenuState currentState = device.getState();
+    if (currentState == ACTIVE_SESSION){
+        // TODO: Implement logic for ending active session
+    }
+    updateMenuList(HOME);
+    device.changeMenuState(HOME);
 }
 
 void MainWindow::updateMenuList(MenuState state){
