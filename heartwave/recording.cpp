@@ -10,37 +10,17 @@ Recording::~Recording(){
     //deconstructor
 }
 
-float Recording::getCoherenceAverage(){
-    return coherenceScores.back();
-}
+//getters
+float Recording::getCoherenceAverage(){ return coherenceScores.back(); }
+int Recording::getChallengeLevel(){ return challengeLevel; }
+int Recording::getBreathInterval(){ return breathInterval; }
+int Recording::getLengthOfSession(){ return lengthOfSession; }
+float Recording::getCurrentAchievementScore(){ return achievementScore; }
 
-int Recording::getChallengeLevel(){
-    return challengeLevel;
-}
-
-int Recording::getBreathInterval(){
-    return breathInterval;
-}
-
-int Recording::getLengthOfSession(){
-    return lengthOfSession;
-}
-
-float Recording::getCurrentAchievementScore(){
-    return achievementScore;
-}
-
-void Recording::setChallengeLevel(int challengeLevel){
-    this->challengeLevel = challengeLevel;
-}
-
-void Recording::setBreathInterval(int breathInterval){
-    this->breathInterval = breathInterval;
-}
-
-void Recording::setLengthOfSession(int duration){
-    this->lengthOfSession = duration;
-}
+//setters
+void Recording::setChallengeLevel(int challengeLevel){ this->challengeLevel = challengeLevel; }
+void Recording::setBreathInterval(int breathInterval){ this->breathInterval = breathInterval;}
+void Recording::setLengthOfSession(int duration){ this->lengthOfSession = duration; }
 
 
 //this function adds a new coherence value to the queueOfCoherenceValues.
@@ -49,7 +29,7 @@ bool Recording::addCoherenceValue(float coherence){
     //checks if queue is over 64 values, then erases the oldest value
     if(queueOfCoherenceValues.size() >= 64){
         queueOfCoherenceValues.erase(queueOfCoherenceValues.begin());
-    }
+}
     //adds the new value to the queue
     queueOfCoherenceValues.push_back(coherence);
     return true;
