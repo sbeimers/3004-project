@@ -23,6 +23,7 @@ SOURCES += \
     recording.cpp
 
 HEADERS += \
+    consts.h \
     device.h \
     log.h \
     mainwindow.h \
