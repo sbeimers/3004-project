@@ -13,7 +13,10 @@ public:
     //getters
     int getBreathPace();
     int getChallengeLevel();
-
+    void startSession();
+    void update(int variability);
+    void startSession(int option);
+    void update();
 
     //settters
     void setBreathPace(int bp);
@@ -30,10 +33,16 @@ public:
     void changeMenuState(MenuState state);
     MenuState getState();
 
+    int getRecordingLength();
+    float getRecordingCoherenceScore();
+    float getRecordingAchievementScore();
 
-
+    vector<float>* getRecordingDataPoints();
 
 private:
+    vector<Log*> logs;
+    Recording recording;
+
     MenuState state;
 
     int breathPace;

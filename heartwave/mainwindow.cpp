@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -8,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     homeMenuOptions = {"START NEW SESSION", "SETTINGS", "VIEW HISTORY"};
+    sessionOptions = {"Start High Coherence Session Simulation", "Start Medium Coherence Session Simulation", "Start Low Coherence Session Simulation"};
     settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATHE PACE"};
     breathPacerOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
     challengeLevelOptions = {"1", "2", "3", "4"};
@@ -18,11 +20,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->menuListWidget->setCurrentRow(0);
 
+    ui->heartRateGraph->addGraph();
+    ui->heartRateGraph->hide();
+
+
     connect(ui->upButton, SIGNAL(released()), this, SLOT(handleUpButtonPress()));
     connect(ui->downButton, SIGNAL(released()), this, SLOT(handleDownButtonPress()));
     connect(ui->selectButton, SIGNAL(released()), this, SLOT(handleSelectButtonPress()));
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
     connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::update);
+    x = 0;
+    y = 0;
 }
 
 MainWindow::~MainWindow()
@@ -49,8 +60,8 @@ void MainWindow::handleSelectButtonPress(){
     if (currentState == HOME){
         switch(currentRow){
             case 0: // Start new session
-                updateMenuList(ACTIVE_SESSION);
-                device.changeMenuState(ACTIVE_SESSION);
+                updateMenuList(SESSION_SELECT);
+                device.changeMenuState(SESSION_SELECT);
                 break;
             case 1: // Settings
                 updateMenuList(SETTINGS);
@@ -61,6 +72,28 @@ void MainWindow::handleSelectButtonPress(){
                 device.changeMenuState(LOGS);
                 break;
         }
+    }else if (currentState == SESSION_SELECT){
+        switch (currentRow){
+            case 0: // High coherence session
+                device.startSession(0); // 0 for option high... change maybe later
+                break;
+            case 1:
+                //device.startSession(&mediumCoherenceDataSet);
+                break;
+            case 2:
+                //device.startSession(&lowCoherenceDataSet);
+                break;
+        }
+        timer->start(5000);
+        ui->menuListWidget->hide();
+        ui->heartRateGraph->show();
+        ui->heartRateGraph->graph(0)->data()->clear();
+        ui->heartRateGraph->graph(0)->addData(0, 0);
+        ui->heartRateGraph->rescaleAxes();
+        ui->heartRateGraph->graph(0)->data()->clear();
+        ui->heartRateGraph->replot();
+        device.changeMenuState(ACTIVE_SESSION);
+
     } else if (currentState == SETTINGS){
         switch(currentRow){
             case 0: // Change challenge level
@@ -100,16 +133,22 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
+        timer->stop();
+        ui->heartRateGraph->hide();
+        ui->menuListWidget->show();
         // Have to add aditional logic for ending session
         // The below is a placeholder
-        updateMenuList(HOME);
-        device.changeMenuState(HOME);
+        updateMenuList(SESSION_SELECT);
+        device.changeMenuState(SESSION_SELECT);
     }
 }
 
 void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
+        timer->stop();
+        ui->heartRateGraph->hide();
+        ui->menuListWidget->show();
         // TODO: Implement logic for ending active session
     }
     updateMenuList(HOME);
@@ -125,7 +164,12 @@ void MainWindow::updateMenuList(MenuState state){
             ui->menuListWidget->addItem(QString::fromStdString(s));
         }
         ui->menuListWidget->setCurrentRow(0);
-    } else if (state == SETTINGS){
+    } else if (state == SESSION_SELECT){
+        for (string s : sessionOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(0);
+    }else if (state == SETTINGS){
         for (string s : settingsMenuOptions){
             ui->menuListWidget->addItem(QString::fromStdString(s));
         }
@@ -157,4 +201,22 @@ void MainWindow::displayLog(int logNum){
     ui->menuListWidget->clear();
     string placeHolder = "One must imagine log " + std::to_string(logNum) + " here";
     ui->menuListWidget->addItem(QString::fromStdString(placeHolder));
+}
+
+void MainWindow::update(){
+    device.update();
+    int recordingCoherenceScore = device.getRecordingCoherenceScore();
+    int recordingLength = device.getRecordingLength();
+    int recordingAchievementScore = device.getRecordingAchievementScore();
+
+    cout << recordingLength << endl;
+
+    for (int x = recordingLength - 5; x < recordingLength; x++){
+        ui->heartRateGraph->graph()->addData(x, device.getRecordingDataPoints()->at(x));
+    }
+    // Add logic to get plot points
+
+    ui->heartRateGraph->rescaleAxes();
+    ui->heartRateGraph->replot();
+
 }
