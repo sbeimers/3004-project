@@ -14,7 +14,7 @@ Device::Device(){
 
 void Device::startSession(int option){
     recording.reset();
-    if (option == 0 ) {
+    if (option == 0) {
            recording.setDataPoints(&HIGH_COHERENCE_PLOT_POINTS);
     } // add elses for med and low
 
