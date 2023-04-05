@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>409</width>
+    <width>415</width>
     <height>637</height>
    </rect>
   </property>
@@ -205,10 +205,10 @@ border-color: black;
    <widget class="QListWidget" name="menuListWidget">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>101</y>
-      <width>271</width>
-      <height>201</height>
+      <x>55</x>
+      <y>90</y>
+      <width>301</width>
+      <height>211</height>
      </rect>
     </property>
    </widget>
@@ -225,27 +225,177 @@ border-color: black;
      <string notr="true">background-color: rgb(85, 87, 83)</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="logDetailBox">
+    <property name="geometry">
+     <rect>
+      <x>55</x>
+      <y>90</y>
+      <width>301</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="title">
+     <string>Log summary: </string>
+    </property>
+    <widget class="QCustomPlot" name="heartRateDetailGraph" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>109</y>
+       <width>241</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailChallengeLevelLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Challenge level: </string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailAvgCoherenceLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>121</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Average coherence: </string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailSesLenLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>121</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Session length: </string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailAchScoreLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>151</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Achievement score: </string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="percentTimeLabel">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>30</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="midLineWidth">
+      <number>0</number>
+     </property>
+     <property name="text">
+      <string>% of time spent in 
+ coherence states</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailLowLabel">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>70</y>
+       <width>71</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Low: </string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailMedLabel">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>70</y>
+       <width>71</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Med: </string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="detailHighLabel">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>90</y>
+       <width>71</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>High: </string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="detailSaveDelList">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>110</y>
+       <width>61</width>
+       <height>101</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
    <widget class="QGroupBox" name="heartRateGraphBox">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>100</y>
-      <width>271</width>
-      <height>201</height>
+      <x>55</x>
+      <y>90</y>
+      <width>301</width>
+      <height>211</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: white</string>
     </property>
     <property name="title">
-     <string>Coherence                Length             Achievement</string>
+     <string>Coherence                    Length                  Achievement</string>
     </property>
     <widget class="QCustomPlot" name="heartRateGraph" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>35</y>
-       <width>271</width>
+       <width>301</width>
        <height>140</height>
       </rect>
      </property>
@@ -272,12 +422,12 @@ border-color: black;
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="coherenceScoreLabel_2">
+    <widget class="QLabel" name="lengthLabel">
      <property name="geometry">
       <rect>
-       <x>101</x>
+       <x>110</x>
        <y>20</y>
-       <width>60</width>
+       <width>71</width>
        <height>17</height>
       </rect>
      </property>
@@ -291,13 +441,13 @@ border-color: black;
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="coherenceScoreLabel_3">
+    <widget class="QLabel" name="achievementScoreLabel">
      <property name="geometry">
       <rect>
-       <x>197</x>
+       <x>214</x>
        <y>20</y>
-       <width>60</width>
-       <height>17</height>
+       <width>81</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -318,7 +468,7 @@ border-color: black;
       <rect>
        <x>9</x>
        <y>180</y>
-       <width>251</width>
+       <width>281</width>
        <height>20</height>
       </rect>
      </property>
@@ -343,6 +493,7 @@ border-color: black;
    <zorder>menuButton</zorder>
    <zorder>powerButton</zorder>
    <zorder>menuListWidget</zorder>
+   <zorder>logDetailBox</zorder>
    <zorder>heartRateGraphBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -350,7 +501,7 @@ border-color: black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>409</width>
+     <width>415</width>
      <height>22</height>
     </rect>
    </property>

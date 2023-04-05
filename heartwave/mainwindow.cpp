@@ -22,6 +22,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->heartRateGraph->addGraph();
     ui->heartRateGraphBox->hide();
 
+    ui->heartRateDetailGraph->addGraph();
+    ui->detailSaveDelList->addItem("RETURN");
+    ui->detailSaveDelList->addItem("DELETE");
+    ui->logDetailBox->hide();
 
     connect(ui->upButton, SIGNAL(released()), this, SLOT(handleUpButtonPress()));
     connect(ui->downButton, SIGNAL(released()), this, SLOT(handleDownButtonPress()));
@@ -77,30 +81,51 @@ void MainWindow::handlePowerButtonPress(){
         device.changeMenuState(HOME);
         ui->menuListWidget->hide();
         ui->heartRateGraphBox->hide();
-        //ui->logDetailBox->hide();
-        //ui->deviceDeletionBox->hide();
-        //ui->logDeletionBox->hide();
+        ui->logDetailBox->hide();
     }
 }
 
 void MainWindow::handleUpButtonPress(){
-    int currentRow = ui->menuListWidget->currentRow();
-    int lastIndex = ui->menuListWidget->count();
-    ui->menuListWidget->setCurrentRow(currentRow == 0 ? lastIndex - 1 : currentRow - 1);
+    MenuState currentState = device.getState();
+
+    int currentRow;
+    int lastIndex;
+
+    if (currentState == LOG || currentState == SESSION_END){
+        currentRow = ui->detailSaveDelList->currentRow();
+        lastIndex = ui->detailSaveDelList->count();
+        ui->detailSaveDelList->setCurrentRow(currentRow == 0 ? lastIndex - 1: currentRow - 1);
+    }else {
+        currentRow = ui->menuListWidget->currentRow();
+        lastIndex = ui->menuListWidget->count();
+        ui->menuListWidget->setCurrentRow(currentRow == 0 ? lastIndex - 1 : currentRow - 1);
+    }
 }
 
 void MainWindow::handleDownButtonPress(){
-    int currentRow = ui->menuListWidget->currentRow();
-    int lastIndex = ui->menuListWidget->count();
-    ui->menuListWidget->setCurrentRow(currentRow == lastIndex - 1 ? 0 : currentRow + 1);
+    MenuState currentState = device.getState();
+
+    int currentRow;
+    int lastIndex;
+
+    if (currentState == LOG || currentState == SESSION_END){
+        currentRow = ui->detailSaveDelList->currentRow();
+        lastIndex = ui->detailSaveDelList->count();
+        ui->detailSaveDelList->setCurrentRow(currentRow == lastIndex - 1 ? 0 : currentRow + 1);
+    }else {
+        currentRow = ui->menuListWidget->currentRow();
+        lastIndex = ui->menuListWidget->count();
+        ui->menuListWidget->setCurrentRow(currentRow == lastIndex - 1 ? 0 : currentRow + 1);
+    }
 }
 
 void MainWindow::handleSelectButtonPress(){
     MenuState currentState = device.getState();
-    int currentRow = ui->menuListWidget->currentRow();
+    int menuListWidgetRow = ui->menuListWidget->currentRow();
+    int saveDelListRow = ui->detailSaveDelList->currentRow();
 
     if (currentState == HOME){
-        switch(currentRow){
+        switch(menuListWidgetRow){
             case 0: // Start new session
                 updateMenuList(SESSION_SELECT);
                 device.changeMenuState(SESSION_SELECT);
@@ -114,8 +139,9 @@ void MainWindow::handleSelectButtonPress(){
                 device.changeMenuState(LOGS);
                 break;
         }
-    }else if (currentState == SESSION_SELECT){
-        switch (currentRow){
+
+    } else if (currentState == SESSION_SELECT){
+        switch (menuListWidgetRow){
             case 0: // High coherence session
                 device.startSession(0); // 0 for option high... change maybe later
                 break;
@@ -133,7 +159,7 @@ void MainWindow::handleSelectButtonPress(){
         device.changeMenuState(ACTIVE_SESSION);
 
     } else if (currentState == SETTINGS){
-        switch(currentRow){
+        switch(menuListWidgetRow){
             case 0: // Change challenge level
                 updateMenuList(CHALLENGE_LEVEL);
                 device.changeMenuState(CHALLENGE_LEVEL);
@@ -149,18 +175,43 @@ void MainWindow::handleSelectButtonPress(){
                 ui->breathPacer->setMaximum(device.getBreathPace());
                 break;
         }
+
     } else if (currentState == CHALLENGE_LEVEL){
-         device.setChallengeLevel(currentRow);
+         device.setChallengeLevel(menuListWidgetRow);
          updateMenuList(SETTINGS);
          device.changeMenuState(SETTINGS);
+
     } else if (currentState == BREATH_PACER){
-         device.setBreathPace(currentRow);
+         device.setBreathPace(menuListWidgetRow);
          ui->breathPacer->setMaximum(device.getBreathPace());
          updateMenuList(SETTINGS);
          device.changeMenuState(SETTINGS);
+
     } else if (currentState == LOGS){
         device.changeMenuState(LOG);
-        displayLog(currentRow);
+        displayLog(menuListWidgetRow);
+
+    } else if (currentState == ACTIVE_SESSION){
+        sessionTimer->stop();
+        breathTimer->stop();
+        device.saveRecording();
+        displayLog(device.getLogs().size() - 1);
+        device.changeMenuState(SESSION_END);
+
+    } else if (currentState == SESSION_END){
+        if (saveDelListRow == 1){ device.deleteLog(device.getLogs().size() - 1); }
+        device.changeMenuState(SESSION_SELECT);
+        ui->logDetailBox->hide();
+        ui->menuListWidget->show();
+        updateMenuList(SESSION_SELECT);
+
+    } else if (currentState == LOG){
+        QString uiDateStr = ui->logDetailBox->title();
+        if (saveDelListRow == 1){ device.deleteLog(device.getLogIndexByDate(uiDateStr)); }
+        device.changeMenuState(LOGS);
+        ui->logDetailBox->hide();
+        ui->menuListWidget->show();
+        updateMenuList(LOGS);
     }
 
 }
@@ -168,25 +219,28 @@ void MainWindow::handleSelectButtonPress(){
 void MainWindow::handleBackButtonPress(){
     MenuState currentState = device.getState();
 
-    if (currentState == SETTINGS || currentState == LOGS){
+    if (currentState == SESSION_SELECT || currentState == SETTINGS || currentState == LOGS){
         updateMenuList(HOME);
         device.changeMenuState(HOME);
     } else if (currentState == CHALLENGE_LEVEL || currentState == BREATH_PACER){
         updateMenuList(SETTINGS);
         device.changeMenuState(SETTINGS);
     } else if (currentState == LOG){
+        ui->logDetailBox->hide();
+        ui->menuListWidget->show();
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
         sessionTimer->stop();
         breathTimer->stop();
         device.saveRecording();
-        ui->heartRateGraphBox->hide();
-        ui->menuListWidget->show();
-        // Have to add aditional logic for ending session
-        // The below is a placeholder
+        displayLog(device.getLogs().size() - 1);
+        device.changeMenuState(SESSION_END);
+    } else if (currentState == SESSION_END){
         updateMenuList(SESSION_SELECT);
         device.changeMenuState(SESSION_SELECT);
+        ui->logDetailBox->hide();
+        ui->menuListWidget->show();
     }
 }
 
@@ -197,9 +251,10 @@ void MainWindow::handleMenuButtonPress(){
         breathTimer->stop();
         device.saveRecording();
         ui->heartRateGraphBox->hide();
-        ui->menuListWidget->show();
-        // TODO: Implement logic for ending active session
+    } else if (currentState == SESSION_END || currentState == LOG){
+        ui->logDetailBox->hide();
     }
+    ui->menuListWidget->show();
     updateMenuList(HOME);
     device.changeMenuState(HOME);
 }
@@ -224,8 +279,9 @@ void MainWindow::updateMenuList(MenuState state){
         }
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == LOGS){
-        // TODO: Figure out how we should display logs
-        ui->menuListWidget->addItem("One must imagine logs here");
+        for (int x = 0; x < device.getLogs().size(); ++x){
+            ui->menuListWidget->addItem(QString::fromStdString(std::to_string(x + 1) + ": ") + device.getLogs().at(x)->getDate());
+        }
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == ACTIVE_SESSION){
         // TODO: Figure out how we should display sessions
@@ -245,11 +301,36 @@ void MainWindow::updateMenuList(MenuState state){
 }
 
 void MainWindow::displayLog(int logNum){
-    // TODO: Figure how to display and individual log
-    // The below code is a placeholder until we figure out how we want to display log info
-    ui->menuListWidget->clear();
-    string placeHolder = "One must imagine log " + std::to_string(logNum) + " here";
-    ui->menuListWidget->addItem(QString::fromStdString(placeHolder));
+    // Hide logs list and set menu list back to logs
+    ui->menuListWidget->hide();
+    ui->heartRateGraphBox->hide();
+
+    // Get selected log
+    Log* currentLog = device.getLogs().at(logNum);
+
+    // Update ui details with log info
+    ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
+    ui->detailChallengeLevelLabel->setText(QString::fromStdString("Challenge level: " + std::to_string(currentLog->getChallengeLevel())));
+    ui->detailSesLenLabel->setText(QString::fromStdString("Session length: " + std::to_string(currentLog->getLengthOfSession())));
+    ui->detailAchScoreLabel->setText(QString::fromStdString("Achievement score: " + std::to_string(currentLog->getAchievementScore())));
+    ui->detailAvgCoherenceLabel->setText(QString::fromStdString("Average coherence: " + std::to_string(currentLog->getAverageCoherence())));
+    ui->detailLowLabel->setText(QString::fromStdString("Low: " + std::to_string(currentLog->getLowPercentage())));
+    ui->detailMedLabel->setText(QString::fromStdString("Med: " + std::to_string(currentLog->getMediumPercentage())));
+    ui->detailHighLabel->setText(QString::fromStdString("High: " + std::to_string(currentLog->getHighPercentage())));
+
+    // Update detail graph
+    vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
+
+    for (int x = 0; x < currentLogPlotPoints.size(); ++x){
+        ui->heartRateDetailGraph->graph(0)->addData(x, currentLogPlotPoints.at(x));
+    }
+
+    ui->heartRateDetailGraph->rescaleAxes();
+    ui->heartRateDetailGraph->replot();
+
+    // Show log detail box
+    ui->logDetailBox->show();
+    ui->detailSaveDelList->setCurrentRow(0);
 }
 
 void MainWindow::updateSession(){
@@ -258,10 +339,8 @@ void MainWindow::updateSession(){
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
 
-    cout << recordingLength << endl;
-
     for (int x = recordingLength - 5; x < recordingLength; x++){
-        ui->heartRateGraph->graph()->addData(x, device.getRecordingDataPoints()->at(x));
+        ui->heartRateGraph->graph(0)->addData(x, device.getRecordingDataPoints()->at(x));
     }
     // Add logic to get plot points
 

@@ -55,6 +55,15 @@ void Device::restore() {
     logs.clear();
 }
 
+int Device::getLogIndexByDate(QString d){
+    for (int x = 0; x < logs.size(); x++){
+        if (QString::compare(logs.at(x)->getDate(), QString::fromStdString(d.toStdString().substr(13))) == 0){
+            return x;
+        }
+    }
+    return 0;
+}
+
 void Device::update(){
     recording.update();
 }
@@ -71,6 +80,7 @@ int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
 float Device::getRecordingCoherenceScore(){ return recording.getCoherenceAverage(); }
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
 vector<float>* Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
+vector<Log*> Device::getLogs() { return logs; }
 
 //power logic
 void Device::toggleOnOff(){ turnedOn = !turnedOn; }
