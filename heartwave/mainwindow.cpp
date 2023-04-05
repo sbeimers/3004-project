@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->heartRateGraph->addGraph();
     ui->heartRateGraphBox->hide();
 
+    ui->heartRateDetailGraph->addGraph();
+    ui->logDetailBox->hide();
 
     connect(ui->upButton, SIGNAL(released()), this, SLOT(handleUpButtonPress()));
     connect(ui->downButton, SIGNAL(released()), this, SLOT(handleDownButtonPress()));
@@ -114,7 +116,8 @@ void MainWindow::handleSelectButtonPress(){
                 device.changeMenuState(LOGS);
                 break;
         }
-    }else if (currentState == SESSION_SELECT){
+
+    } else if (currentState == SESSION_SELECT){
         switch (currentRow){
             case 0: // High coherence session
                 device.startSession(0); // 0 for option high... change maybe later
@@ -149,15 +152,18 @@ void MainWindow::handleSelectButtonPress(){
                 ui->breathPacer->setMaximum(device.getBreathPace());
                 break;
         }
+
     } else if (currentState == CHALLENGE_LEVEL){
          device.setChallengeLevel(currentRow);
          updateMenuList(SETTINGS);
          device.changeMenuState(SETTINGS);
+
     } else if (currentState == BREATH_PACER){
          device.setBreathPace(currentRow);
          ui->breathPacer->setMaximum(device.getBreathPace());
          updateMenuList(SETTINGS);
          device.changeMenuState(SETTINGS);
+
     } else if (currentState == LOGS){
         device.changeMenuState(LOG);
         displayLog(currentRow);
@@ -167,6 +173,7 @@ void MainWindow::handleSelectButtonPress(){
 
 void MainWindow::handleBackButtonPress(){
     MenuState currentState = device.getState();
+    cout << currentState << endl;
 
     if (currentState == SESSION_SELECT || currentState == SETTINGS || currentState == LOGS){
         updateMenuList(HOME);
@@ -175,6 +182,8 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(SETTINGS);
         device.changeMenuState(SETTINGS);
     } else if (currentState == LOG){
+        ui->logDetailBox->hide();
+        ui->menuListWidget->show();
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
@@ -246,11 +255,33 @@ void MainWindow::updateMenuList(MenuState state){
 }
 
 void MainWindow::displayLog(int logNum){
-    // TODO: Figure how to display and individual log
-    // The below code is a placeholder until we figure out how we want to display log info
-    ui->menuListWidget->clear();
-    string placeHolder = "One must imagine log " + std::to_string(logNum) + " here";
-    ui->menuListWidget->addItem(QString::fromStdString(placeHolder));
+    // Hide logs list and set menu list back to logs
+    ui->menuListWidget->hide();
+
+    // Get selected log
+    Log* currentLog = device.getLogs().at(logNum);
+
+    // Update ui details with log info
+    ui->detailChallengeLevelLabel->setText(QString::fromStdString("Challenge level: " + std::to_string(currentLog->getChallengeLevel())));
+    ui->detailSesLenLabel->setText(QString::fromStdString("Session length: " + std::to_string(currentLog->getLengthOfSession())));
+    ui->detailAchScoreLabel->setText(QString::fromStdString("Achievement score: " + std::to_string(currentLog->getAchievementScore())));
+    ui->detailAvgCoherenceLabel->setText(QString::fromStdString("Average coherence: " + std::to_string(currentLog->getAverageCoherence())));
+    ui->detailLowLabel->setText(QString::fromStdString("Low: " + std::to_string(currentLog->getLowPercentage())));
+    ui->detailMedLabel->setText(QString::fromStdString("Med: " + std::to_string(currentLog->getMediumPercentage())));
+    ui->detailHighLabel->setText(QString::fromStdString("High: " + std::to_string(currentLog->getHighPercentage())));
+
+    // Update detail graph
+    vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
+
+    for (int x = 0; x < currentLogPlotPoints.size(); ++x){
+        ui->heartRateDetailGraph->graph(0)->addData(x, currentLogPlotPoints.at(x));
+    }
+
+    ui->heartRateDetailGraph->rescaleAxes();
+    ui->heartRateDetailGraph->replot();
+
+    // Show log detail box
+    ui->logDetailBox->show();
 }
 
 void MainWindow::updateSession(){
@@ -262,7 +293,7 @@ void MainWindow::updateSession(){
     cout << recordingLength << endl;
 
     for (int x = recordingLength - 5; x < recordingLength; x++){
-        ui->heartRateGraph->graph()->addData(x, device.getRecordingDataPoints()->at(x));
+        ui->heartRateGraph->graph(0)->addData(x, device.getRecordingDataPoints()->at(x));
     }
     // Add logic to get plot points
 
