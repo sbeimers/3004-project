@@ -43,6 +43,18 @@ void Device::saveRecording() {
     logs.push_back(newLog);
 }
 
+void Device::deleteLog(int index) {
+    logs.erase(logs.begin() + index);
+}
+
+void Device::restore() {
+    breathPace = 9;
+    challengeLevel = 0;
+    turnedOn = true;
+    recording = Recording();
+    logs.clear();
+}
+
 void Device::update(){
     recording.update();
 }
