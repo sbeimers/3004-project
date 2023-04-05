@@ -43,6 +43,9 @@ public:
     // recording save
     void saveRecording();
 
+    void deleteLog(int index);
+    void restore();
+
 private:
     vector<Log*> logs;
     Recording recording;
