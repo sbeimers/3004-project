@@ -36,6 +36,7 @@ private:
     vector<string> breathPacerOptions;
     vector<string> challengeLevelOptions;
 
+    void resetGraph();
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
 
