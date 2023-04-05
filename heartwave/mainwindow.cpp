@@ -224,8 +224,9 @@ void MainWindow::updateMenuList(MenuState state){
         }
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == LOGS){
-        // TODO: Figure out how we should display logs
-        ui->menuListWidget->addItem("One must imagine logs here");
+        for (Log* l: device.getLogs()){
+            ui->menuListWidget->addItem(l->getDate());
+        }
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == ACTIVE_SESSION){
         // TODO: Figure out how we should display sessions
