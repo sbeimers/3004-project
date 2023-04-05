@@ -14,6 +14,7 @@ public:
     //getters
     int getBreathPace();
     int getChallengeLevel();
+    vector<Log*> getLogs();
     void startSession();
     void update(int variability);
     void startSession(int option);

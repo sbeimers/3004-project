@@ -71,6 +71,7 @@ int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
 float Device::getRecordingCoherenceScore(){ return recording.getCoherenceAverage(); }
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
 vector<float>* Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
+vector<Log*> Device::getLogs() { return logs; }
 
 //power logic
 void Device::toggleOnOff(){ turnedOn = !turnedOn; }
