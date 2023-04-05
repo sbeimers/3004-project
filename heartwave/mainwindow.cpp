@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->selectButton, SIGNAL(released()), this, SLOT(handleSelectButtonPress()));
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
     connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
+    connect(ui->powerButton, SIGNAL(released()), this, SLOT(handlePowerButtonPress()));
 
     breathTimer = new QTimer(this);
     sessionTimer = new QTimer(this);
@@ -39,6 +40,20 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::handlePowerButtonPress(){
+    device.toggleOnOff();
+
+    if (device.getOnOffState()){
+       ui->menuListWidget->show();
+    }else{
+        ui->menuListWidget->hide();
+        ui->heartRateGraphBox->hide();
+        //ui->logDetailBox->hide();
+        //ui->deviceDeletionBox->hide();
+        //ui->logDeletionBox->hide();
+    }
 }
 
 void MainWindow::handleUpButtonPress(){

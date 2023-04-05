@@ -24,8 +24,8 @@ public:
     void setChallengeLevel(int cl);
 
     //device power and battery logic
-    void turnOn(); // turn device off
-    void turnOff(); // turn device off
+    void toggleOnOff();
+    bool getOnOffState();
     int getBatteryLevel(); // returns battery level
     void resetBatteryLevel();// resets battery level
     void setBatteryLevel(int);
