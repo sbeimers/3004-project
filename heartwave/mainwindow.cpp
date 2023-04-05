@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menuListWidget->setCurrentRow(0);
 
     ui->heartRateGraph->addGraph();
-    ui->heartRateGraph->hide();
+    ui->heartRateGraphBox->hide();
 
 
     connect(ui->upButton, SIGNAL(released()), this, SLOT(handleUpButtonPress()));
@@ -84,7 +84,7 @@ void MainWindow::handleSelectButtonPress(){
         }
         timer->start(5000);
         ui->menuListWidget->hide();
-        ui->heartRateGraph->show();
+        ui->heartRateGraphBox->show();
         ui->heartRateGraph->graph(0)->data()->clear();
         ui->heartRateGraph->graph(0)->addData(0, 0);
         ui->heartRateGraph->rescaleAxes();
@@ -132,7 +132,7 @@ void MainWindow::handleBackButtonPress(){
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
         timer->stop();
-        ui->heartRateGraph->hide();
+        ui->heartRateGraphBox->hide();
         ui->menuListWidget->show();
         // Have to add aditional logic for ending session
         // The below is a placeholder
@@ -145,7 +145,7 @@ void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
         timer->stop();
-        ui->heartRateGraph->hide();
+        ui->heartRateGraphBox->hide();
         ui->menuListWidget->show();
         // TODO: Implement logic for ending active session
     }
