@@ -44,7 +44,6 @@ void Device::saveRecording() {
 }
 
 void Device::deleteLog(int index) {
-    cout << index << endl;
     logs.erase(logs.begin() + index);
 }
 

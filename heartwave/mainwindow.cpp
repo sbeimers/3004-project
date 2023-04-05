@@ -82,8 +82,6 @@ void MainWindow::handlePowerButtonPress(){
         ui->menuListWidget->hide();
         ui->heartRateGraphBox->hide();
         ui->logDetailBox->hide();
-        //ui->deviceDeletionBox->hide();
-        //ui->logDeletionBox->hide();
     }
 }
 
@@ -281,8 +279,8 @@ void MainWindow::updateMenuList(MenuState state){
         }
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == LOGS){
-        for (Log* l: device.getLogs()){
-            ui->menuListWidget->addItem(l->getDate());
+        for (int x = 0; x < device.getLogs().size(); ++x){
+            ui->menuListWidget->addItem(QString::fromStdString(std::to_string(x + 1) + ": ") + device.getLogs().at(x)->getDate());
         }
         ui->menuListWidget->setCurrentRow(0);
     } else if (state == ACTIVE_SESSION){
