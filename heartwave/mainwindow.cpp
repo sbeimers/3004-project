@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -64,13 +63,16 @@ void MainWindow::resetGraph(){
 
 void MainWindow::handlePowerButtonPress(){
     device.toggleOnOff();
+    MenuState currentState = device.getState();
 
     if (device.getOnOffState()){
        ui->menuListWidget->show();
     }else{
-        sessionTimer->stop();
-        breathTimer->stop();
-        device.saveRecording();
+        if (currentState == ACTIVE_SESSION) {
+            sessionTimer->stop();
+            breathTimer->stop();
+            device.saveRecording();
+        }
         updateMenuList(HOME);
         device.changeMenuState(HOME);
         ui->menuListWidget->hide();
@@ -139,6 +141,12 @@ void MainWindow::handleSelectButtonPress(){
             case 1: // Breath pacer
                 updateMenuList(BREATH_PACER);
                 device.changeMenuState(BREATH_PACER);
+                break;
+            case 2: // restore device
+                device.restore();
+                updateMenuList(HOME);
+                device.changeMenuState(HOME);
+                ui->breathPacer->setMaximum(device.getBreathPace());
                 break;
         }
     } else if (currentState == CHALLENGE_LEVEL){
