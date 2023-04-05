@@ -168,7 +168,7 @@ void MainWindow::handleSelectButtonPress(){
 void MainWindow::handleBackButtonPress(){
     MenuState currentState = device.getState();
 
-    if (currentState == SETTINGS || currentState == LOGS){
+    if (currentState == SESSION_SELECT || currentState == SETTINGS || currentState == LOGS){
         updateMenuList(HOME);
         device.changeMenuState(HOME);
     } else if (currentState == CHALLENGE_LEVEL || currentState == BREATH_PACER){
