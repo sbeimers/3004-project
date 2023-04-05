@@ -42,6 +42,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::resetGraph(){
+    // Start session and breath pacertimer
+    sessionTimer->start(5000);
+    breathTimer->start(1000);
+
+    // Hide menu list and show graph
+    ui->menuListWidget->hide();
+    ui->heartRateGraphBox->show();
+
+    // Reset graph and rescale axes
+    ui->heartRateGraph->graph(0)->data()->clear();
+    ui->heartRateGraph->graph(0)->addData(0, 0);
+    ui->heartRateGraph->rescaleAxes();
+    ui->heartRateGraph->graph(0)->data()->clear();
+    ui->heartRateGraph->replot();
+
+    // Reset breath pacer
+    ui->breathPacer->setValue(0);
+}
+
 void MainWindow::handlePowerButtonPress(){
     device.toggleOnOff();
 
@@ -105,23 +125,7 @@ void MainWindow::handleSelectButtonPress(){
                 break;
         }
 
-        // Start session and breath pacertimer
-        sessionTimer->start(5000);
-        breathTimer->start(1000);
-
-        // Hide menu list and show graph
-        ui->menuListWidget->hide();
-        ui->heartRateGraphBox->show();
-
-        // Reset graph and rescale axes
-        ui->heartRateGraph->graph(0)->data()->clear();
-        ui->heartRateGraph->graph(0)->addData(0, 0);
-        ui->heartRateGraph->rescaleAxes();
-        ui->heartRateGraph->graph(0)->data()->clear();
-        ui->heartRateGraph->replot();
-
-        // Reset breath pacer
-        ui->breathPacer->setValue(0);
+        resetGraph();
 
         // Change device state
         device.changeMenuState(ACTIVE_SESSION);
