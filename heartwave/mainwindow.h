@@ -45,6 +45,7 @@ private slots:
     void handleSelectButtonPress();
     void handleBackButtonPress();
     void handleMenuButtonPress();
+    void handlePowerButtonPress();
     void updateSession();
     void updateBreathPace();
 };

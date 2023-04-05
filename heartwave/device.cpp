@@ -11,7 +11,7 @@ Device::Device(){
     challengeLevel = 0;
 
     batteryLevel = 100;// battery level
-    turnedOn = false; // determins if the device is on or off
+    turnedOn = true; // determins if the device is on or off
 
     recording = Recording();
 }
@@ -61,8 +61,8 @@ float Device::getRecordingAchievementScore(){ return recording.getCurrentAchieve
 vector<float>* Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
 
 //power logic
-void Device::turnOn(){ turnedOn = true; } //device turn on
-void Device::turnOff(){ turnedOn = false; } // device turn off
+void Device::toggleOnOff(){ turnedOn = !turnedOn; }
+bool Device::getOnOffState(){ return turnedOn; }
 int Device::getBatteryLevel(){ return batteryLevel; } // returns the battery level
 void Device::resetBatteryLevel() { batteryLevel = 100; }// changes the battery level to 100
 void Device::setBatteryLevel(int power) { batteryLevel = power; }
