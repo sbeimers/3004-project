@@ -25,7 +25,7 @@ public:
 
 
 private:
-    QString date; // in format mm/dd/yyyy eg. 03/21/2023
+    QString date; // in format "dd.mm.yyyy hh:mm:ss"
     int challengeLevel; // from 0-3 (ui will show level 1-4)
     int breathInterval; // breathinterval
     int lengthOfSession; // total length of session in seconds
