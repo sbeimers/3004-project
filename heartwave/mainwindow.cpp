@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "QDebug"
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -148,9 +146,7 @@ void MainWindow::handleSelectButtonPress(){
                 device.restore();
                 updateMenuList(HOME);
                 device.changeMenuState(HOME);
-                qDebug() << device.getBreathPace();
                 ui->breathPacer->setMaximum(device.getBreathPace());
-//                ui->
                 break;
         }
     } else if (currentState == CHALLENGE_LEVEL){
