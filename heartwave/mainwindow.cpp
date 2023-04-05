@@ -48,6 +48,11 @@ void MainWindow::handlePowerButtonPress(){
     if (device.getOnOffState()){
        ui->menuListWidget->show();
     }else{
+        sessionTimer->stop();
+        breathTimer->stop();
+        device.saveRecording();
+        updateMenuList(HOME);
+        device.changeMenuState(HOME);
         ui->menuListWidget->hide();
         ui->heartRateGraphBox->hide();
         //ui->logDetailBox->hide();
