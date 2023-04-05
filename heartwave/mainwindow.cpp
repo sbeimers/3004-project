@@ -30,8 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
     connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
 
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MainWindow::update);
+    breathTimer = new QTimer(this);
+    sessionTimer = new QTimer(this);
+    connect(sessionTimer, &QTimer::timeout, this, &MainWindow::updateSession);
+    connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
 }
 
 MainWindow::~MainWindow()
@@ -82,14 +84,26 @@ void MainWindow::handleSelectButtonPress(){
                 //device.startSession(&lowCoherenceDataSet);
                 break;
         }
-        timer->start(5000);
+
+        // Start session and breath pacertimer
+        sessionTimer->start(5000);
+        breathTimer->start(1000);
+
+        // Hide menu list and show graph
         ui->menuListWidget->hide();
         ui->heartRateGraphBox->show();
+
+        // Reset graph and rescale axes
         ui->heartRateGraph->graph(0)->data()->clear();
         ui->heartRateGraph->graph(0)->addData(0, 0);
         ui->heartRateGraph->rescaleAxes();
         ui->heartRateGraph->graph(0)->data()->clear();
         ui->heartRateGraph->replot();
+
+        // Reset breath pacer
+        ui->breathPacer->setValue(0);
+
+        // Change device state
         device.changeMenuState(ACTIVE_SESSION);
 
     } else if (currentState == SETTINGS){
@@ -109,6 +123,7 @@ void MainWindow::handleSelectButtonPress(){
          device.changeMenuState(SETTINGS);
     } else if (currentState == BREATH_PACER){
          device.setBreathPace(currentRow);
+         ui->breathPacer->setMaximum(device.getBreathPace());
          updateMenuList(SETTINGS);
          device.changeMenuState(SETTINGS);
     } else if (currentState == LOGS){
@@ -131,7 +146,8 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
-        timer->stop();
+        sessionTimer->stop();
+        breathTimer->stop();
         ui->heartRateGraphBox->hide();
         ui->menuListWidget->show();
         // Have to add aditional logic for ending session
@@ -144,7 +160,8 @@ void MainWindow::handleBackButtonPress(){
 void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
-        timer->stop();
+        sessionTimer->stop();
+        breathTimer->stop();
         ui->heartRateGraphBox->hide();
         ui->menuListWidget->show();
         // TODO: Implement logic for ending active session
@@ -201,7 +218,7 @@ void MainWindow::displayLog(int logNum){
     ui->menuListWidget->addItem(QString::fromStdString(placeHolder));
 }
 
-void MainWindow::update(){
+void MainWindow::updateSession(){
     device.update();
     int recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
@@ -216,5 +233,11 @@ void MainWindow::update(){
 
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
+}
 
+
+void MainWindow::updateBreathPace(){
+    int currentValue = ui->breathPacer->value();
+    int maxValue = ui->breathPacer->maximum();
+    ui->breathPacer->setValue(currentValue == maxValue ? 0 : currentValue + 1);
 }

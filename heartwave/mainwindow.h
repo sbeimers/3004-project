@@ -27,7 +27,8 @@ public:
 private:
     Ui::MainWindow *ui;
     Device device;
-    QTimer* timer;
+    QTimer* sessionTimer;
+    QTimer* breathTimer;
 
     vector<string> homeMenuOptions;
     vector<string> sessionOptions;
@@ -44,6 +45,7 @@ private slots:
     void handleSelectButtonPress();
     void handleBackButtonPress();
     void handleMenuButtonPress();
-    void update();
+    void updateSession();
+    void updateBreathPace();
 };
 #endif // MAINWINDOW_H

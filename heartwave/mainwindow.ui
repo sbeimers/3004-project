@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
+    <width>409</width>
     <height>637</height>
    </rect>
   </property>
@@ -225,64 +225,6 @@ border-color: black;
      <string notr="true">background-color: rgb(85, 87, 83)</string>
     </property>
    </widget>
-   <widget class="QSlider" name="variabilityScale">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>140</y>
-      <width>160</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>15</number>
-    </property>
-    <property name="singleStep">
-     <number>1</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="variabilityLabel">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>120</y>
-      <width>121</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Heart rate variability</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>370</y>
-      <width>54</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>length</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>410</y>
-      <width>111</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>achievement score</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="heartRateGraphBox">
     <property name="geometry">
      <rect>
@@ -368,6 +310,25 @@ border-color: black;
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
+    <widget class="QSlider" name="breathPacer">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>180</y>
+       <width>251</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>9</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </widget>
    <zorder>background</zorder>
    <zorder>coherenceRed</zorder>
@@ -382,10 +343,6 @@ border-color: black;
    <zorder>menuButton</zorder>
    <zorder>powerButton</zorder>
    <zorder>menuListWidget</zorder>
-   <zorder>variabilityScale</zorder>
-   <zorder>variabilityLabel</zorder>
-   <zorder>label_2</zorder>
-   <zorder>label_3</zorder>
    <zorder>heartRateGraphBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -393,7 +350,7 @@ border-color: black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>787</width>
+     <width>409</width>
      <height>22</height>
     </rect>
    </property>
