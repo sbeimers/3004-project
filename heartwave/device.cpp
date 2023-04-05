@@ -16,6 +16,12 @@ Device::Device(){
     recording = Recording();
 }
 
+Device::~Device() {
+    for (Log* l: logs) {
+        delete l;
+    }
+}
+
 void Device::startSession(int option){
     recording.reset();
     if (option == 0) {

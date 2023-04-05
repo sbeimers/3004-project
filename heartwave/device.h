@@ -9,6 +9,7 @@ class Device
 {
 public:
     Device();
+    ~Device();
 
     //getters
     int getBreathPace();
