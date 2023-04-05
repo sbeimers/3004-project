@@ -44,6 +44,7 @@ void Device::saveRecording() {
 }
 
 void Device::deleteLog(int index) {
+    cout << index << endl;
     logs.erase(logs.begin() + index);
 }
 
@@ -53,6 +54,15 @@ void Device::restore() {
     turnedOn = true;
     recording = Recording();
     logs.clear();
+}
+
+int Device::getLogIndexByDate(QString d){
+    for (int x = 0; x < logs.size(); x++){
+        if (QString::compare(logs.at(x)->getDate(), QString::fromStdString(d.toStdString().substr(13))) == 0){
+            return x;
+        }
+    }
+    return 0;
 }
 
 void Device::update(){

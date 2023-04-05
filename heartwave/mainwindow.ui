@@ -238,7 +238,7 @@ border-color: black;
      <string notr="true">background-color: white;</string>
     </property>
     <property name="title">
-     <string>Log summary</string>
+     <string>Log summary: </string>
     </property>
     <widget class="QCustomPlot" name="heartRateDetailGraph" native="true">
      <property name="geometry">
