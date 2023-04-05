@@ -9,6 +9,7 @@ class Device
 {
 public:
     Device();
+    ~Device();
 
     //getters
     int getBreathPace();
@@ -38,6 +39,9 @@ public:
     float getRecordingAchievementScore();
 
     vector<float>* getRecordingDataPoints();
+
+    // recording save
+    void saveRecording();
 
 private:
     vector<Log*> logs;

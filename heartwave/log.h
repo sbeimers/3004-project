@@ -4,14 +4,15 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "QString"
 
 using namespace std;
 
 class Log
 {
 public:
-    Log(string date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore, vector<float> plotPoints);
-    string getDate();
+    Log(QString& date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore, vector<float> *plotPoints);
+    QString getDate();
     int getChallengeLevel();
     int getBreathInterval();
     int getLengthOfSession();
@@ -24,7 +25,7 @@ public:
 
 
 private:
-    string date; // in format mm/dd/yyyy eg. 03/21/2023
+    QString date; // in format "dd.mm.yyyy hh:mm:ss"
     int challengeLevel; // from 0-3 (ui will show level 1-4)
     int breathInterval; // breathinterval
     int lengthOfSession; // total length of session in seconds
