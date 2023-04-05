@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     homeMenuOptions = {"START NEW SESSION", "SETTINGS", "VIEW HISTORY"};
     sessionOptions = {"Start High Coherence Session Simulation", "Start Medium Coherence Session Simulation", "Start Low Coherence Session Simulation"};
-    settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATHE PACE"};
+    settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATHE PACE", "RESTORE DEVICE"};
     breathPacerOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
     challengeLevelOptions = {"1", "2", "3", "4"};
 
@@ -64,13 +65,16 @@ void MainWindow::resetGraph(){
 
 void MainWindow::handlePowerButtonPress(){
     device.toggleOnOff();
+    MenuState currentState = device.getState();
 
     if (device.getOnOffState()){
        ui->menuListWidget->show();
     }else{
-        sessionTimer->stop();
-        breathTimer->stop();
-        device.saveRecording();
+        if (currentState == ACTIVE_SESSION) {
+            sessionTimer->stop();
+            breathTimer->stop();
+            device.saveRecording();
+        }
         updateMenuList(HOME);
         device.changeMenuState(HOME);
         ui->menuListWidget->hide();
@@ -139,6 +143,14 @@ void MainWindow::handleSelectButtonPress(){
             case 1: // Breath pacer
                 updateMenuList(BREATH_PACER);
                 device.changeMenuState(BREATH_PACER);
+                break;
+            case 2: // restore device
+                device.restore();
+                updateMenuList(HOME);
+                device.changeMenuState(HOME);
+                qDebug() << device.getBreathPace();
+                ui->breathPacer->setMaximum(device.getBreathPace());
+//                ui->
                 break;
         }
     } else if (currentState == CHALLENGE_LEVEL){
