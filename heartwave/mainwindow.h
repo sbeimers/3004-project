@@ -35,7 +35,6 @@ private:
     vector<string> settingsMenuOptions;
     vector<string> breathPacerOptions;
     vector<string> challengeLevelOptions;
-    vector<string> restoreMenuOptions;
 
     void resetGraph();
     void updateMenuList(MenuState state);
