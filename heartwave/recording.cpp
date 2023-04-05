@@ -31,7 +31,8 @@ bool Recording::addCoherenceValue(float coherence){
     //checks if queue is over 64 values, then erases the oldest value
     if(queueOfCoherenceValues.size() >= 64){
         queueOfCoherenceValues.erase(queueOfCoherenceValues.begin());
-}
+    }
+
     //adds the new value to the queue
     queueOfCoherenceValues.push_back(coherence);
     return true;

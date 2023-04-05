@@ -27,7 +27,8 @@ public:
 private:
     Ui::MainWindow *ui;
     Device device;
-    QTimer* timer;
+    QTimer* sessionTimer;
+    QTimer* breathTimer;
 
     vector<string> homeMenuOptions;
     vector<string> sessionOptions;
@@ -38,14 +39,13 @@ private:
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
 
-    int x,y;
-
 private slots:
     void handleUpButtonPress();
     void handleDownButtonPress();
     void handleSelectButtonPress();
     void handleBackButtonPress();
     void handleMenuButtonPress();
-    void update();
+    void updateSession();
+    void updateBreathPace();
 };
 #endif // MAINWINDOW_H
