@@ -1,6 +1,10 @@
 #include "device.h"
 #include "consts.h"
 
+#include "QString"
+#include "QDebug"
+#include "QDateTime"
+
 Device::Device(){
     state = MenuState::HOME;
     breathPace = 9;
@@ -20,6 +24,17 @@ void Device::startSession(int option){
 
     recording.setBreathInterval(breathPace);
     recording.setChallengeLevel(challengeLevel);
+
+}
+
+void Device::saveRecording() {
+    QDateTime date = QDateTime::currentDateTime();
+    QString formattedTime = date.toString("dd.MM.yyyy hh:mm:ss");
+
+    qDebug() << "Saving Log with Date: " + formattedTime;
+
+    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), (float) 100.0, (float) 0.0, (float) 0.0, recording.getCurrentAchievementScore(), recording.getCurrentDataPoints());
+    logs.push_back(newLog);
 }
 
 void Device::update(){

@@ -39,6 +39,9 @@ public:
 
     vector<float>* getRecordingDataPoints();
 
+    // recording save
+    void saveRecording();
+
 private:
     vector<Log*> logs;
     Recording recording;

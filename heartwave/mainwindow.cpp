@@ -148,6 +148,7 @@ void MainWindow::handleBackButtonPress(){
     } else if (currentState == ACTIVE_SESSION){
         sessionTimer->stop();
         breathTimer->stop();
+        device.saveRecording();
         ui->heartRateGraphBox->hide();
         ui->menuListWidget->show();
         // Have to add aditional logic for ending session
@@ -162,6 +163,7 @@ void MainWindow::handleMenuButtonPress(){
     if (currentState == ACTIVE_SESSION){
         sessionTimer->stop();
         breathTimer->stop();
+        device.saveRecording();
         ui->heartRateGraphBox->hide();
         ui->menuListWidget->show();
         // TODO: Implement logic for ending active session
