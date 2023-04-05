@@ -310,13 +310,13 @@ void MainWindow::displayLog(int logNum){
 
     // Update ui details with log info
     ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
-    ui->detailChallengeLevelLabel->setText(QString::fromStdString("Challenge level: " + std::to_string(currentLog->getChallengeLevel())));
-    ui->detailSesLenLabel->setText(QString::fromStdString("Session length: " + std::to_string(currentLog->getLengthOfSession())));
-    ui->detailAchScoreLabel->setText(QString::fromStdString("Achievement score: " + std::to_string(currentLog->getAchievementScore())));
-    ui->detailAvgCoherenceLabel->setText(QString::fromStdString("Average coherence: " + std::to_string(currentLog->getAverageCoherence())));
-    ui->detailLowLabel->setText(QString::fromStdString("Low: " + std::to_string(currentLog->getLowPercentage())));
-    ui->detailMedLabel->setText(QString::fromStdString("Med: " + std::to_string(currentLog->getMediumPercentage())));
-    ui->detailHighLabel->setText(QString::fromStdString("High: " + std::to_string(currentLog->getHighPercentage())));
+    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel(), 'f', 1) + QString("%"));
+    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession(), 'f', 1) + QString("%"));
+    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore(), 'f', 1) + QString("%"));
+    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1) + QString("%"));
+    ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
+    ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
+    ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
 
     // Update detail graph
     vector<float> currentLogPlotPoints = currentLog->getPlotPoints();

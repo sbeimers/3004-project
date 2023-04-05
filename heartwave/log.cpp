@@ -15,7 +15,6 @@ Log::Log(QString& idate, int ichallengeLevel, int ibreathInterval, int ilengthOf
     lowPercentage = ((int)(ilowPercentage*10))/10.0;
     mediumPercentage = ((int)(imediumPercentage*10))/10.0;
     highPercentage = ((int)(ihighPercentage*10))/10.0;
-
     achievementScore = iachievementScore;
 }
 
