@@ -56,6 +56,6 @@ private slots:
     void updateSession();
     void updateBreathPace();
     void updateBatteryLevel();
-    void resetBattryLevel();
+    void resetBatteryLevel();
 };
 #endif // MAINWINDOW_H
