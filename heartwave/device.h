@@ -62,8 +62,6 @@ private:
 
     int batteryLevel;
     bool turnedOn;
-    // need one recording
-    // vector(?) of logs, gotta store a few of those
 };
 
 #endif // DEVICE_H
