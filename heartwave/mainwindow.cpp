@@ -73,7 +73,7 @@ void MainWindow::handlePowerButtonPress(){
        ui->menuListWidget->show();
     }else{
         if (currentState == ACTIVE_SESSION) {
-            endSession();
+            endSession(); //stops timers and resets indicators
             device.saveRecording();
         }
         updateMenuList(HOME);
@@ -191,7 +191,7 @@ void MainWindow::handleSelectButtonPress(){
         displayLog(menuListWidgetRow);
 
     } else if (currentState == ACTIVE_SESSION){
-        endSession();
+        endSession(); //stops timers and resets indicators
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
@@ -229,7 +229,7 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
-        endSession();
+        endSession(); //stops timers and resets indicators
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
@@ -244,7 +244,7 @@ void MainWindow::handleBackButtonPress(){
 void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
-        endSession();
+        endSession(); //stops timers and resets indicators
         device.saveRecording();
         ui->heartRateGraphBox->hide();
     } else if (currentState == SESSION_END || currentState == LOG){
@@ -334,7 +334,6 @@ void MainWindow::updateSession(){
     int recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
-    int indicator = device.getIndicator();
 
     for (int x = recordingLength - 5; x < recordingLength; x++){
         ui->heartRateGraph->graph(0)->addData(x, device.getRecordingDataPoints()->at(x));
@@ -344,8 +343,9 @@ void MainWindow::updateSession(){
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
 
-    changeIndicator(indicator);
-    playBeep();
+     int indicator = device.getIndicator(); //gets the indicator number to turn on
+    turnOnIndicator(indicator); //changes the indicator colour
+    playBeep(); //plays a beep noise every 5 seconds (console log)
 }
 
 
@@ -355,7 +355,8 @@ void MainWindow::updateBreathPace(){
     ui->breathPacer->setValue(currentValue == maxValue ? 0 : currentValue + 1);
 }
 
-void MainWindow::changeIndicator(int indicatorNum){
+//turns on specified indicator number
+void MainWindow::turnOnIndicator(int indicatorNum){
     resetIndicators();
     if(indicatorNum == 0){
         ui->coherenceRed->setStyleSheet (ui->coherenceRed->styleSheet() + "background-color: #ff5252");
@@ -368,16 +369,19 @@ void MainWindow::changeIndicator(int indicatorNum){
     }
 }
 
+//console logs a beep every 5 seconds
 void MainWindow::playBeep(){
     cout<<"Beep."<<endl;
 }
 
+//changes the indicators back to their default styles
 void MainWindow::resetIndicators(){
     ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
     ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
     ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
 }
 
+//ends the session: stops all timers and resets indicators. called when menu, back, or select button is pressed during active session.
 void MainWindow::endSession(){
     sessionTimer->stop();
     breathTimer->stop();
