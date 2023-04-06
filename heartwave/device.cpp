@@ -97,7 +97,7 @@ void Device::changeMenuState(MenuState state){ this->state = state; }
 
 
 //indicator logic
-int Device::checkIndicator(){
+int Device::getIndicator(){
     //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
     float coherence = 0.6; //placehodler value for testing
     float mediumRangeLow = 0.5;

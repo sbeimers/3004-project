@@ -48,7 +48,7 @@ public:
     void deleteLog(int index);
     void restore();
 
-    int checkIndicator();
+    int getIndicator();
 
 
 private:

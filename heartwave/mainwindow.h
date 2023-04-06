@@ -42,6 +42,8 @@ private:
 
     void changeIndicator(int indicatorNum);
 
+    void playBeep();
+
 private slots:
     void handleUpButtonPress();
     void handleDownButtonPress();
