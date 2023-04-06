@@ -354,3 +354,18 @@ void MainWindow::updateBreathPace(){
     int maxValue = ui->breathPacer->maximum();
     ui->breathPacer->setValue(currentValue == maxValue ? 0 : currentValue + 1);
 }
+
+void MainWindow::changeIndicator(int indicatorNum){
+    ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    if(indicatorNum == 0){
+        ui->coherenceRed->setStyleSheet (ui->coherenceRed->styleSheet() + "background-color: #ff5252");
+    }
+    else if(indicatorNum == 1){
+        ui->coherenceBlue->setStyleSheet(ui->coherenceBlue->styleSheet() +"background-color: #27aeff");
+    }
+    else{
+        ui->coherenceGreen->setStyleSheet(ui->coherenceGreen->styleSheet() +"background-color: #4bd67e");
+    }
+}

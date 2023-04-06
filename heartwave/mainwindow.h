@@ -40,6 +40,8 @@ private:
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
 
+    void changeIndicator(int indicatorNum);
+
 private slots:
     void handleUpButtonPress();
     void handleDownButtonPress();
