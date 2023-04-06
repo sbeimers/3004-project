@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
     connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
     connect(ui->powerButton, SIGNAL(released()), this, SLOT(handlePowerButtonPress()));
-    connect(ui->rechargeBattryButton, SIGNAL(released()), this, SLOT(resetBattryLevel()));
+    connect(ui->rechargeBattryButton, SIGNAL(released()), this, SLOT(resetBatteryLevel()));
 
     breathTimer = new QTimer(this);
     sessionTimer = new QTimer(this);
@@ -388,7 +388,7 @@ void MainWindow::updateBatteryLevel() {
     }
 }
 
-void MainWindow::resetBattryLevel() {
+void MainWindow::resetBatteryLevel() {
     device.resetBatteryLevel();
     ui->batteryBar->setValue(device.getBatteryLevel());
     ui->batteryBar->setStyleSheet("QProgressBar::chunk {background-color: rgb(138, 226, 52);}");
