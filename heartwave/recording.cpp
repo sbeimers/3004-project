@@ -95,12 +95,6 @@ int Recording::generateCoherenceValue(){
     return 1;
 }
 
-void Recording::checkIndicator(){
-    //TODO: implement indicator logic
-}
-
-
-
 
 
 

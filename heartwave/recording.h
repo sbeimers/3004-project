@@ -38,9 +38,6 @@ public:
     void addToCoherenceScores(float);
      int generateCoherenceValue(); //TODO: generates value to append to the coherenceValues queue
 
-    //challenge level logic
-    void checkIndicator(); //TODO: calculates the colour of the indicator dependant on the challenge level and coherence score
-
     //achievement score logic
     void updateAchievementScore(); //adds up all of the scores in the coherenceScores vector to update the achievement score attribute
 

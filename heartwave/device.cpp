@@ -97,9 +97,10 @@ void Device::changeMenuState(MenuState state){ this->state = state; }
 
 
 //indicator logic
+//TODO: add challenge level logic
 int Device::getIndicator(){
     //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
-    float coherence = 0.6; //placehodler value for testing
+    float coherence = 0.6; //placeholder value for testing
     float mediumRangeLow = 0.5;
     float mediumRangeHigh = 0.9;
     if(coherence >= mediumRangeLow && coherence <= mediumRangeHigh){
