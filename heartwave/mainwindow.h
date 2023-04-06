@@ -40,6 +40,11 @@ private:
     void updateMenuList(MenuState state);
     void displayLog(int logNum);
 
+    void turnOnIndicator(int indicatorNum);
+    void playBeep();
+    void resetIndicators();
+    void endSession();
+
 private slots:
     void handleUpButtonPress();
     void handleDownButtonPress();

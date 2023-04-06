@@ -92,3 +92,27 @@ void Device::setBatteryLevel(int power) { batteryLevel = power; }
 
 //change menu state
 void Device::changeMenuState(MenuState state){ this->state = state; }
+
+
+//indicator logic
+//TODO: add challenge level logic
+int Device::getIndicator(){
+    //indicator 0 = low (red)
+    //indicator 1 = medium (blue)
+    //indicator 2 = high (green)
+    int indicatorNum = 0;
+    //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
+    float coherence = 0.6; //placeholder value for testing
+    float mediumRangeLow = 0.5;
+    float mediumRangeHigh = 0.9;
+    if(coherence >= mediumRangeLow && coherence <= mediumRangeHigh){
+        indicatorNum = 1;
+    }
+    else if(coherence < mediumRangeLow){
+        indicatorNum = 0;
+    }
+    else{
+        indicatorNum = 2;
+    }
+    return indicatorNum;
+}

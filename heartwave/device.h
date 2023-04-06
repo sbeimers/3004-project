@@ -48,6 +48,9 @@ public:
     void deleteLog(int index);
     void restore();
 
+    int getIndicator();
+
+
 private:
     vector<Log*> logs;
     Recording recording;
@@ -59,8 +62,6 @@ private:
 
     int batteryLevel;
     bool turnedOn;
-
-
     // need one recording
     // vector(?) of logs, gotta store a few of those
 };

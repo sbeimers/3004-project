@@ -73,8 +73,7 @@ void MainWindow::handlePowerButtonPress(){
        ui->menuListWidget->show();
     }else{
         if (currentState == ACTIVE_SESSION) {
-            sessionTimer->stop();
-            breathTimer->stop();
+            endSession(); //stops timers and resets indicators
             device.saveRecording();
         }
         updateMenuList(HOME);
@@ -192,8 +191,7 @@ void MainWindow::handleSelectButtonPress(){
         displayLog(menuListWidgetRow);
 
     } else if (currentState == ACTIVE_SESSION){
-        sessionTimer->stop();
-        breathTimer->stop();
+        endSession(); //stops timers and resets indicators
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
@@ -231,8 +229,7 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
-        sessionTimer->stop();
-        breathTimer->stop();
+        endSession(); //stops timers and resets indicators
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
@@ -247,8 +244,7 @@ void MainWindow::handleBackButtonPress(){
 void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
-        sessionTimer->stop();
-        breathTimer->stop();
+        endSession(); //stops timers and resets indicators
         device.saveRecording();
         ui->heartRateGraphBox->hide();
     } else if (currentState == SESSION_END || currentState == LOG){
@@ -346,6 +342,10 @@ void MainWindow::updateSession(){
 
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
+
+     int indicator = device.getIndicator(); //gets the indicator number to turn on
+    turnOnIndicator(indicator); //changes the indicator colour
+    playBeep(); //plays a beep noise every 5 seconds (console log)
 }
 
 
@@ -353,4 +353,37 @@ void MainWindow::updateBreathPace(){
     int currentValue = ui->breathPacer->value();
     int maxValue = ui->breathPacer->maximum();
     ui->breathPacer->setValue(currentValue == maxValue ? 0 : currentValue + 1);
+}
+
+//turns on specified indicator number
+void MainWindow::turnOnIndicator(int indicatorNum){
+    resetIndicators();
+    if(indicatorNum == 0){
+        ui->coherenceRed->setStyleSheet (ui->coherenceRed->styleSheet() + "background-color: #ff5252");
+    }
+    else if(indicatorNum == 1){
+        ui->coherenceBlue->setStyleSheet(ui->coherenceBlue->styleSheet() +"background-color: #27aeff");
+    }
+    else{
+        ui->coherenceGreen->setStyleSheet(ui->coherenceGreen->styleSheet() +"background-color: #4bd67e");
+    }
+}
+
+//console logs a beep every 5 seconds
+void MainWindow::playBeep(){
+    cout<<"Beep."<<endl;
+}
+
+//changes the indicators back to their default styles
+void MainWindow::resetIndicators(){
+    ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+}
+
+//ends the session: stops all timers and resets indicators. called when menu, back, or select button is pressed during active session.
+void MainWindow::endSession(){
+    sessionTimer->stop();
+    breathTimer->stop();
+    resetIndicators();
 }
