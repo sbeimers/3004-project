@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>415</width>
-    <height>637</height>
+    <height>657</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="coherenceRed" native="true">
@@ -222,7 +225,7 @@ border-color: black;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(85, 87, 83)</string>
+     <string notr="true">background-color: rgb(85, 87, 83); border-radius: 10;</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="logDetailBox">
@@ -480,6 +483,24 @@ border-color: black;</string>
      </property>
     </widget>
    </widget>
+   <widget class="QCheckBox" name="applyToSkinCheckbox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>590</y>
+      <width>121</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Apply to skin</string>
+    </property>
+   </widget>
    <zorder>background</zorder>
    <zorder>coherenceRed</zorder>
    <zorder>coherenceBlue</zorder>
@@ -489,12 +510,13 @@ border-color: black;</string>
    <zorder>rightButton</zorder>
    <zorder>leftButton</zorder>
    <zorder>selectButton</zorder>
-   <zorder>backButton</zorder>
-   <zorder>menuButton</zorder>
    <zorder>powerButton</zorder>
    <zorder>menuListWidget</zorder>
    <zorder>logDetailBox</zorder>
    <zorder>heartRateGraphBox</zorder>
+   <zorder>backButton</zorder>
+   <zorder>menuButton</zorder>
+   <zorder>applyToSkinCheckbox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

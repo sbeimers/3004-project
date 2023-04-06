@@ -336,7 +336,7 @@ void MainWindow::updateSession(){
     int recordingAchievementScore = device.getRecordingAchievementScore();
 
     for (int x = recordingLength - 5; x < recordingLength; x++){
-        ui->heartRateGraph->graph(0)->addData(x, device.getRecordingDataPoints()->at(x));
+        ui->heartRateGraph->graph(0)->addData(x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints()->at(x) : 0);
     }
     // Add logic to get plot points
 
