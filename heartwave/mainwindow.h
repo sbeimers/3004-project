@@ -44,6 +44,10 @@ private:
 
     void playBeep();
 
+    void resetIndicators();
+
+    void endSession();
+
 private slots:
     void handleUpButtonPress();
     void handleDownButtonPress();

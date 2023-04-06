@@ -62,8 +62,6 @@ private:
 
     int batteryLevel;
     bool turnedOn;
-
-    int indicatorNum; //the indicator that should be turned on
     // need one recording
     // vector(?) of logs, gotta store a few of those
 };

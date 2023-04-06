@@ -13,8 +13,6 @@ Device::Device(){
     batteryLevel = 100;// battery level
     turnedOn = true; // determins if the device is on or off
 
-    indicatorNum = 0;
-
     recording = Recording();
 }
 
@@ -99,6 +97,7 @@ void Device::changeMenuState(MenuState state){ this->state = state; }
 //indicator logic
 //TODO: add challenge level logic
 int Device::getIndicator(){
+    int indicatorNum = 0;
     //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
     float coherence = 0.6; //placeholder value for testing
     float mediumRangeLow = 0.5;

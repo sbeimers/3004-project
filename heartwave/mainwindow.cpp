@@ -73,8 +73,7 @@ void MainWindow::handlePowerButtonPress(){
        ui->menuListWidget->show();
     }else{
         if (currentState == ACTIVE_SESSION) {
-            sessionTimer->stop();
-            breathTimer->stop();
+            endSession();
             device.saveRecording();
         }
         updateMenuList(HOME);
@@ -192,8 +191,7 @@ void MainWindow::handleSelectButtonPress(){
         displayLog(menuListWidgetRow);
 
     } else if (currentState == ACTIVE_SESSION){
-        sessionTimer->stop();
-        breathTimer->stop();
+        endSession();
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
@@ -231,8 +229,7 @@ void MainWindow::handleBackButtonPress(){
         updateMenuList(LOGS);
         device.changeMenuState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
-        sessionTimer->stop();
-        breathTimer->stop();
+        endSession();
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
@@ -247,8 +244,7 @@ void MainWindow::handleBackButtonPress(){
 void MainWindow::handleMenuButtonPress(){
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
-        sessionTimer->stop();
-        breathTimer->stop();
+        endSession();
         device.saveRecording();
         ui->heartRateGraphBox->hide();
     } else if (currentState == SESSION_END || currentState == LOG){
@@ -360,9 +356,7 @@ void MainWindow::updateBreathPace(){
 }
 
 void MainWindow::changeIndicator(int indicatorNum){
-    ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
-    ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
-    ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    resetIndicators();
     if(indicatorNum == 0){
         ui->coherenceRed->setStyleSheet (ui->coherenceRed->styleSheet() + "background-color: #ff5252");
     }
@@ -376,4 +370,16 @@ void MainWindow::changeIndicator(int indicatorNum){
 
 void MainWindow::playBeep(){
     cout<<"Beep."<<endl;
+}
+
+void MainWindow::resetIndicators(){
+    ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+}
+
+void MainWindow::endSession(){
+    sessionTimer->stop();
+    breathTimer->stop();
+    resetIndicators();
 }
