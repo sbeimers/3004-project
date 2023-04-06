@@ -13,6 +13,8 @@ Device::Device(){
     batteryLevel = 100;// battery level
     turnedOn = true; // determins if the device is on or off
 
+    indicatorNum = 0;
+
     recording = Recording();
 }
 
@@ -92,3 +94,22 @@ void Device::setBatteryLevel(int power) { batteryLevel = power; }
 
 //change menu state
 void Device::changeMenuState(MenuState state){ this->state = state; }
+
+
+//indicator logic
+int Device::checkIndicator(){
+    //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
+    float coherence = 0.6; //placehodler value for testing
+    float mediumRangeLow = 0.5;
+    float mediumRangeHigh = 0.9;
+    if(coherence >= mediumRangeLow && coherence <= mediumRangeHigh){
+        indicatorNum = 1;
+    }
+    else if(coherence < mediumRangeLow){
+        indicatorNum = 0;
+    }
+    else{
+        indicatorNum = 2;
+    }
+    return indicatorNum;
+}

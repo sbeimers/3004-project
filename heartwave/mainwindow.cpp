@@ -338,6 +338,7 @@ void MainWindow::updateSession(){
     int recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
+    int indicator = device.checkIndicator();
 
     for (int x = recordingLength - 5; x < recordingLength; x++){
         ui->heartRateGraph->graph(0)->addData(x, device.getRecordingDataPoints()->at(x));
@@ -346,6 +347,8 @@ void MainWindow::updateSession(){
 
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
+
+    changeIndicator(indicator);
 }
 
 

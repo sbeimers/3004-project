@@ -48,6 +48,9 @@ public:
     void deleteLog(int index);
     void restore();
 
+    int checkIndicator();
+
+
 private:
     vector<Log*> logs;
     Recording recording;
@@ -60,7 +63,7 @@ private:
     int batteryLevel;
     bool turnedOn;
 
-
+    int indicatorNum; //the indicator that should be turned on
     // need one recording
     // vector(?) of logs, gotta store a few of those
 };
