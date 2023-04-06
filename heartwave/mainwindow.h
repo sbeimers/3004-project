@@ -29,6 +29,7 @@ private:
     Device device;
     QTimer* sessionTimer;
     QTimer* breathTimer;
+    QTimer* batteryTimer;
 
     vector<string> homeMenuOptions;
     vector<string> sessionOptions;
@@ -54,5 +55,7 @@ private slots:
     void handlePowerButtonPress();
     void updateSession();
     void updateBreathPace();
+    void updateBatteryLevel();
+    void resetBattryLevel();
 };
 #endif // MAINWINDOW_H
