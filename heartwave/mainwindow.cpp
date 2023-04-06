@@ -33,11 +33,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->backButton, SIGNAL(released()), this, SLOT(handleBackButtonPress()));
     connect(ui->menuButton, SIGNAL(released()), this, SLOT(handleMenuButtonPress()));
     connect(ui->powerButton, SIGNAL(released()), this, SLOT(handlePowerButtonPress()));
+    connect(ui->rechargeBattryButton, SIGNAL(released()), this, SLOT(resetBatteryLevel()));
 
     breathTimer = new QTimer(this);
     sessionTimer = new QTimer(this);
+    batteryTimer = new QTimer(this);
     connect(sessionTimer, &QTimer::timeout, this, &MainWindow::updateSession);
     connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
+    connect(batteryTimer, &QTimer::timeout, this, &MainWindow::updateBatteryLevel);
+    batteryTimer->start(1000);
+
 }
 
 MainWindow::~MainWindow()
@@ -66,6 +71,7 @@ void MainWindow::resetGraph(){
 }
 
 void MainWindow::handlePowerButtonPress(){
+    if (device.getBatteryLevel() <= 0) { return; }
     device.toggleOnOff();
     MenuState currentState = device.getState();
 
@@ -85,6 +91,7 @@ void MainWindow::handlePowerButtonPress(){
 }
 
 void MainWindow::handleUpButtonPress(){
+    if (device.getOnOffState() == false) { return; }
     MenuState currentState = device.getState();
 
     int currentRow;
@@ -102,6 +109,7 @@ void MainWindow::handleUpButtonPress(){
 }
 
 void MainWindow::handleDownButtonPress(){
+    if (device.getOnOffState() == false) { return; }
     MenuState currentState = device.getState();
 
     int currentRow;
@@ -119,6 +127,7 @@ void MainWindow::handleDownButtonPress(){
 }
 
 void MainWindow::handleSelectButtonPress(){
+    if (device.getOnOffState() == false) { return; }
     MenuState currentState = device.getState();
     int menuListWidgetRow = ui->menuListWidget->currentRow();
     int saveDelListRow = ui->detailSaveDelList->currentRow();
@@ -215,6 +224,7 @@ void MainWindow::handleSelectButtonPress(){
 }
 
 void MainWindow::handleBackButtonPress(){
+    if (device.getOnOffState() == false) { return; }
     MenuState currentState = device.getState();
 
     if (currentState == SESSION_SELECT || currentState == SETTINGS || currentState == LOGS){
@@ -242,6 +252,7 @@ void MainWindow::handleBackButtonPress(){
 }
 
 void MainWindow::handleMenuButtonPress(){
+    if (device.getOnOffState() == false) { return; }
     MenuState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
         endSession(); //stops timers and resets indicators
@@ -306,10 +317,10 @@ void MainWindow::displayLog(int logNum){
 
     // Update ui details with log info
     ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
-    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel(), 'f', 1) + QString("%"));
-    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession(), 'f', 1) + QString("%"));
-    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore(), 'f', 1) + QString("%"));
-    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1) + QString("%"));
+    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel(), 'f', 1));
+    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession(), 'f', 1));
+    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore(), 'f', 1));
+    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
     ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
     ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
     ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
@@ -353,6 +364,34 @@ void MainWindow::updateBreathPace(){
     int currentValue = ui->breathPacer->value();
     int maxValue = ui->breathPacer->maximum();
     ui->breathPacer->setValue(currentValue == maxValue ? 0 : currentValue + 1);
+}
+
+void MainWindow::updateBatteryLevel() {
+    int batteryTick = 2;
+    if (device.getOnOffState() == true) {
+        int currentBattery = device.getBatteryLevel();
+        device.setBatteryLevel(currentBattery - batteryTick);
+        currentBattery = device.getBatteryLevel();
+        if (currentBattery <= 0) {
+            ui->batteryBar->setValue(0);
+            // turn off device.
+            device.setBatteryLevel(1);
+            handlePowerButtonPress();
+            device.setBatteryLevel(0);
+        } else if (currentBattery <= 20) {
+            ui->batteryBar->setValue(currentBattery);
+            ui->batteryBar->setStyleSheet("QProgressBar::chunk {background-color: rgb(239, 41, 41);}");
+        } else {
+            ui->batteryBar->setValue(currentBattery);
+            ui->batteryBar->setStyleSheet("QProgressBar::chunk {background-color: rgb(138, 226, 52);}");
+        }
+    }
+}
+
+void MainWindow::resetBatteryLevel() {
+    device.resetBatteryLevel();
+    ui->batteryBar->setValue(device.getBatteryLevel());
+    ui->batteryBar->setStyleSheet("QProgressBar::chunk {background-color: rgb(138, 226, 52);}");
 }
 
 //turns on specified indicator number
