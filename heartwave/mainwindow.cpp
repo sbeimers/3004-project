@@ -87,6 +87,7 @@ void MainWindow::handlePowerButtonPress(){
         ui->menuListWidget->hide();
         ui->heartRateGraphBox->hide();
         ui->logDetailBox->hide();
+        ui->readingIndicator->setStyleSheet("color: white;");
     }
 }
 
@@ -166,6 +167,9 @@ void MainWindow::handleSelectButtonPress(){
         // Change device state
         device.changeMenuState(ACTIVE_SESSION);
 
+        // Turn on reading indicator
+        ui->readingIndicator->setStyleSheet("color: pink;");
+
     } else if (currentState == SETTINGS){
         switch(menuListWidgetRow){
             case 0: // Change challenge level
@@ -204,6 +208,7 @@ void MainWindow::handleSelectButtonPress(){
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
+        ui->readingIndicator->setStyleSheet("color: white;");
 
     } else if (currentState == SESSION_END){
         if (saveDelListRow == 1){ device.deleteLog(device.getLogs().size() - 1); }
@@ -243,6 +248,7 @@ void MainWindow::handleBackButtonPress(){
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
         device.changeMenuState(SESSION_END);
+        ui->readingIndicator->setStyleSheet("color: white;");
     } else if (currentState == SESSION_END){
         updateMenuList(SESSION_SELECT);
         device.changeMenuState(SESSION_SELECT);
@@ -258,6 +264,7 @@ void MainWindow::handleMenuButtonPress(){
         endSession(); //stops timers and resets indicators
         device.saveRecording();
         ui->heartRateGraphBox->hide();
+        ui->readingIndicator->setStyleSheet("color: white;");
     } else if (currentState == SESSION_END || currentState == LOG){
         ui->logDetailBox->hide();
     }
