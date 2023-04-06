@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     homeMenuOptions = {"START NEW SESSION", "SETTINGS", "VIEW HISTORY"};
     sessionOptions = {"Start High Coherence Session Simulation", "Start Medium Coherence Session Simulation", "Start Low Coherence Session Simulation"};
-    settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATHE PACE", "RESTORE DEVICE"};
+    settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATH PACER INTERVAL", "RESTORE DEVICE"};
     breathPacerOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
     challengeLevelOptions = {"1", "2", "3", "4"};
 
