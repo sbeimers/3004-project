@@ -101,10 +101,29 @@ int Device::getIndicator(){
     //indicator 1 = medium (blue)
     //indicator 2 = high (green)
     int indicatorNum = 0;
+
     //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
-    float coherence = 0.6; //placeholder value for testing
-    float mediumRangeLow = 0.5;
-    float mediumRangeHigh = 0.9;
+    float coherence = 1; //placeholder value for testing
+
+     float mediumRangeLow = 0;
+     float mediumRangeHigh = 0;
+    if(challengeLevel == 0){
+        mediumRangeLow = 0.5;
+        mediumRangeHigh = 0.9;
+    }
+    else if(challengeLevel == 1){
+        mediumRangeLow = 0.6;
+        mediumRangeHigh = 2.1;
+    }
+    else if(challengeLevel ==2){
+        mediumRangeLow = 1.8;
+        mediumRangeHigh = 4.0;
+    }
+    else{
+        mediumRangeLow = 4.0;
+        mediumRangeHigh = 6.0;
+    }
+
     if(coherence >= mediumRangeLow && coherence <= mediumRangeHigh){
         indicatorNum = 1;
     }
