@@ -105,8 +105,8 @@ int Device::getIndicator(){
     //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
     float coherence = 1; //placeholder value for testing
 
-     float mediumRangeLow;
-     float mediumRangeHigh;
+     float mediumRangeLow = 0;
+     float mediumRangeHigh = 0;
     if(challengeLevel == 0){
         mediumRangeLow = 0.5;
         mediumRangeHigh = 0.9;
