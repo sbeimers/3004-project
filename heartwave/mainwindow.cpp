@@ -168,7 +168,7 @@ void MainWindow::handleSelectButtonPress(){
         device.changeMenuState(ACTIVE_SESSION);
 
         // Turn on reading indicator
-        ui->readingIndicator->setStyleSheet("color: pink;");
+        ui->readingIndicator->setStyleSheet("color: red;");
 
     } else if (currentState == SETTINGS){
         switch(menuListWidgetRow){
