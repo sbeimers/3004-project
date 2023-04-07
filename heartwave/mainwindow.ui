@@ -533,6 +533,27 @@ border-color: black;</string>
      <string>Recharge Battery</string>
     </property>
    </widget>
+   <widget class="QLabel" name="readingIndicator">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>30</y>
+      <width>21</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>19</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+    <property name="text">
+     <string>♥</string>
+    </property>
+   </widget>
    <zorder>background</zorder>
    <zorder>coherenceRed</zorder>
    <zorder>coherenceBlue</zorder>
@@ -551,6 +572,7 @@ border-color: black;</string>
    <zorder>applyToSkinCheckbox</zorder>
    <zorder>batteryBar</zorder>
    <zorder>rechargeBattryButton</zorder>
+   <zorder>readingIndicator</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
