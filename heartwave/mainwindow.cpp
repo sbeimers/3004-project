@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(sessionTimer, &QTimer::timeout, this, &MainWindow::updateSession);
     connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
     connect(batteryTimer, &QTimer::timeout, this, &MainWindow::updateBatteryLevel);
-    batteryTimer->start(1000);
+    batteryTimer->start(15000);
 
 }
 
@@ -50,7 +50,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::resetGraph(){
+void MainWindow::startSession(){
     // Start session and breath pacertimer
     sessionTimer->start(5000);
     breathTimer->start(1000);
@@ -59,6 +59,23 @@ void MainWindow::resetGraph(){
     ui->menuListWidget->hide();
     ui->heartRateGraphBox->show();
 
+    resetGraph();
+
+
+    // Reset breath pacer
+    ui->breathPacer->setValue(0);
+
+}
+
+void MainWindow::resetLogGraph(){
+    ui->heartRateDetailGraph->graph(0)->data()->clear();
+    ui->heartRateDetailGraph->graph(0)->addData(0, 0);
+    ui->heartRateDetailGraph->rescaleAxes();
+    ui->heartRateDetailGraph->graph(0)->data()->clear();
+    ui->heartRateDetailGraph->replot();
+}
+void MainWindow::resetGraph(){
+
     // Reset graph and rescale axes
     ui->heartRateGraph->graph(0)->data()->clear();
     ui->heartRateGraph->graph(0)->addData(0, 0);
@@ -66,8 +83,6 @@ void MainWindow::resetGraph(){
     ui->heartRateGraph->graph(0)->data()->clear();
     ui->heartRateGraph->replot();
 
-    // Reset breath pacer
-    ui->breathPacer->setValue(0);
 }
 
 void MainWindow::handlePowerButtonPress(){
@@ -162,7 +177,7 @@ void MainWindow::handleSelectButtonPress(){
                 break;
         }
 
-        resetGraph();
+        startSession();
 
         // Change device state
         device.changeMenuState(ACTIVE_SESSION);
@@ -332,6 +347,7 @@ void MainWindow::displayLog(int logNum){
     ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
     ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
 
+    resetLogGraph();
     // Update detail graph
     vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
 
@@ -353,8 +369,8 @@ void MainWindow::updateSession(){
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
 
-    for (int x = recordingLength - 5; x < recordingLength; x++){
-        ui->heartRateGraph->graph(0)->addData(x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints()->at(x) : 0);
+    for (int x = 0; x < 5; x++){
+        ui->heartRateGraph->graph(0)->addData(recordingLength - 5 + x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints().at(x) : 0);
     }
     // Add logic to get plot points
 

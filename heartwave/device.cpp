@@ -39,7 +39,7 @@ void Device::saveRecording() {
 
     qDebug() << "Saving Log with Date: " + formattedTime;
 
-    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), (float) 100.0, (float) 0.0, (float) 0.0, recording.getCurrentAchievementScore(), recording.getCurrentDataPoints());
+    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), (float) 100.0, (float) 0.0, (float) 0.0, recording.getCurrentAchievementScore(), recording.getAllPlotPoints());
     logs.push_back(newLog);
 }
 
@@ -79,7 +79,16 @@ int Device::getChallengeLevel() { return challengeLevel; }
 int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
 float Device::getRecordingCoherenceScore(){ return recording.getCoherenceAverage(); }
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
-vector<float>* Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
+vector<float> Device::getRecordingDataPoints() {
+//    vector<float>* d = recording.getCurrentDataPoints();
+//    cout<<d->size()<<endl;
+//    for(int i = 0; i < 5; i++){
+//        cout<<d->at(i)<<endl;
+//      // points.push_back(plotPoints.at(plotPoints.size()-1-i));
+
+//       // cout<< plotPoints.at(plotPoints.size()-1-i)<<endl;
+//    }
+    return recording.getCurrentDataPoints(); }
 vector<Log*> Device::getLogs() { return logs; }
 
 //power logic

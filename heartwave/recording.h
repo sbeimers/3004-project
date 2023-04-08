@@ -24,7 +24,8 @@ public:
     int getBreathInterval();
     int getLengthOfSession();
     float getCurrentAchievementScore();
-    vector<float>* getCurrentDataPoints();
+    vector<float> getCurrentDataPoints();
+    vector<float> getAllPlotPoints();
 
     //setters
     void setChallengeLevel(int); //sets the challenge level
@@ -45,6 +46,8 @@ public:
 
     void update(); //called when 5 seconds have passed
 
+    void addToPlotPoints();
+
 private:
     vector<float> queueOfCoherenceValues; //holds 64 values only, updated every second
     vector<float> coherenceScores; //holds all coherence scores (each is calculated from the last 64 seconds), updating every 5 seconds
@@ -55,6 +58,7 @@ private:
     int breathInterval; //holds breath interval from 0-29
     int lengthOfSession; //duration of the session
     float achievementScore;  //achievement score; sum of all coherence scores
+
 
 };
 

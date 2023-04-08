@@ -16,8 +16,6 @@ public:
     int getChallengeLevel();
     vector<Log*> getLogs();
     int getLogIndexByDate(QString);
-    void startSession();
-    void update(int variability);
     void startSession(int option);
     void update();
 
@@ -40,7 +38,7 @@ public:
     float getRecordingCoherenceScore();
     float getRecordingAchievementScore();
 
-    vector<float>* getRecordingDataPoints();
+    vector<float> getRecordingDataPoints();
 
     // recording save
     void saveRecording();

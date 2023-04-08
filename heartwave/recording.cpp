@@ -17,7 +17,6 @@ int Recording::getChallengeLevel(){ return challengeLevel; }
 int Recording::getBreathInterval(){ return breathInterval; }
 int Recording::getLengthOfSession(){ return lengthOfSession; }
 float Recording::getCurrentAchievementScore(){ return achievementScore; }
-vector<float>* Recording::getCurrentDataPoints() { return dataPoints; }
 
 //setters
 void Recording::setChallengeLevel(int challengeLevel){ this->challengeLevel = challengeLevel; }
@@ -88,6 +87,8 @@ void Recording::update(){
 //    addToCoherenceScores(average); //adds it to the queue
 //    updateAchievementScore(); //the achievement score updates
     setLengthOfSession(lengthOfSession + 5); //updates the duration to reflect the 5 seconds that have passed
+    addToPlotPoints();
+    //getCurrentDataPoints();
 }
 
 int Recording::generateCoherenceValue(){
@@ -95,6 +96,28 @@ int Recording::generateCoherenceValue(){
     return 1;
 }
 
+
+
+vector<float> Recording::getCurrentDataPoints() {
+    vector<float> points;
+    cout<<"******"<<endl;
+    for(int i = 0; i < 5; i++){
+     points.push_back(plotPoints.at(plotPoints.size()-1-i));
+
+     cout<< plotPoints.at(plotPoints.size()-1-i)<<endl;
+    }
+    return points;
+}
+
+void Recording::addToPlotPoints(){
+    for (int x = lengthOfSession - 5; x < lengthOfSession; x++){
+        plotPoints.push_back(dataPoints->at(x));
+    }
+}
+
+vector<float> Recording::getAllPlotPoints(){
+    return vector<float>(plotPoints); //due to problems with the overriding the same object, the log needs a copy.
+}
 
 
 
