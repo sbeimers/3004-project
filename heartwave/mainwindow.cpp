@@ -52,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::startSession(){
     // Start session and breath pacertimer
-    sessionTimer->start(1000);
+    sessionTimer->start(5000);
     breathTimer->start(1000);
 
     // Hide menu list and show graph
