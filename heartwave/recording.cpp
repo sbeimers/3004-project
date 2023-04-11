@@ -12,7 +12,7 @@ Recording::~Recording(){
 }
 
 //getters
-float Recording::getCoherenceAverage(){ return coherenceScores.back(); }
+float Recording::getCoherenceScore(){ return coherenceScores.back(); }
 int Recording::getChallengeLevel(){ return challengeLevel; }
 int Recording::getBreathInterval(){ return breathInterval; }
 int Recording::getLengthOfSession(){ return lengthOfSession; }
@@ -67,6 +67,12 @@ void Recording::addToPlotPoints(){
 //this function appends the newest coherence average/score to coherenceScores.
 void Recording::addToCoherenceScores(){
     coherenceScores.push_back(coherenceDataValues->at(coherenceScores.size()));
+}
+
+//returns the average coherence based off of all coherence scores during the session
+//sum of coherence scores, AKA achievement score, divided by the amount of coherence scores
+float Recording::getAverageCoherence(){
+    return float(achievementScore) / float(coherenceScores.size());
 }
 
 //this function updates the achievement score by looking at the last recorded coherence average and adding it to the preestablished achievement score.

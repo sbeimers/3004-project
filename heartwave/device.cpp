@@ -11,7 +11,7 @@ Device::Device(){
     challengeLevel = 0;
 
     batteryLevel = 100;// battery level
-    turnedOn = true; // determins if the device is on or off
+    turnedOn = true; // determines if the device is on or off
 
     recording = Recording();
 
@@ -62,7 +62,7 @@ void Device::saveRecording() {
     float medPercentage = (float(mediumIndicatorTime) / recording.getLengthOfSession()) * 100;
     float highPercentage = (float(highIndicatorTime) / recording.getLengthOfSession()) * 100;
 
-    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), lowPercentage, medPercentage, highPercentage, recording.getCurrentAchievementScore(), recording.getAllPlotPoints());
+    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getAverageCoherence(), lowPercentage, medPercentage, highPercentage, recording.getCurrentAchievementScore(), recording.getAllPlotPoints());
     logs.push_back(newLog);
 }
 
@@ -103,7 +103,7 @@ MenuState Device::getState(){ return state; }
 int Device::getBreathPace() { return breathPace; }
 int Device::getChallengeLevel() { return challengeLevel; }
 int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
-float Device::getRecordingCoherenceScore(){ return recording.getCoherenceAverage(); }
+float Device::getRecordingCoherenceScore(){ return recording.getCoherenceScore(); }
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
 vector<float> Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
 vector<Log*> Device::getLogs() { return logs; }
@@ -129,7 +129,7 @@ int Device::getIndicator(){
     float mediumRangeLow = 0;
     float mediumRangeHigh = 0;
 
-    float coherence = recording.getCoherenceAverage();
+    float coherence = recording.getCoherenceScore();
 
     if(challengeLevel == 0){
         mediumRangeLow = 0.5;

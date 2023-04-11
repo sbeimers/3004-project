@@ -19,7 +19,8 @@ public:
     ~Recording();
 
     //getters
-    float getCoherenceAverage();
+    float getCoherenceScore();
+    float getAverageCoherence();
     int getChallengeLevel();
     int getBreathInterval();
     int getLengthOfSession();
