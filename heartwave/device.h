@@ -19,6 +19,7 @@ public:
     void startSession(int option);
     void update();
 
+
     //settters
     void setBreathPace(int bp);
     void setChallengeLevel(int cl);
