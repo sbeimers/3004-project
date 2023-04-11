@@ -52,7 +52,7 @@ void Recording::update(){
 vector<float> Recording::getCurrentDataPoints() {
     vector<float> points;
     for(int i = 0; i < 5; i++){
-     points.push_back(plotPoints.at(plotPoints.size()-1-i));
+     points.push_back(plotPoints.at(plotPoints.size()-5+i));
     }
     return points;
 }
