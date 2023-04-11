@@ -365,6 +365,7 @@ void MainWindow::displayLog(int logNum){
 
 void MainWindow::updateSession(){
     device.update();
+
     int recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
@@ -378,9 +379,10 @@ void MainWindow::updateSession(){
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
 
-    ui->coherenceScoreLabel->setText(QString::number(device.getRecordingCoherenceScore()));
-    ui->lengthLabel->setText(QString::number(device.getRecordingLength()) + " s");
-    ui->achievementScoreLabel->setText(QString::number(device.getRecordingAchievementScore()));
+    //update labels
+    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore));
+    ui->lengthLabel->setText(QString::number(recordingLength) + " s");
+    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore));
 
     //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on

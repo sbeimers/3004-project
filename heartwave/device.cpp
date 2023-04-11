@@ -109,8 +109,8 @@ int Device::getIndicator(){
     //indicator 2 = high (green)
     int indicatorNum = 0;
 
-    //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
-    float coherence = 1; //placeholder value for testing
+    float coherence = recording.getCoherenceAverage();
+
 
      float mediumRangeLow = 0;
      float mediumRangeHigh = 0;
