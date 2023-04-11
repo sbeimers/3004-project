@@ -369,16 +369,20 @@ void MainWindow::updateSession(){
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
 
+    //logic to get the 5 plot points from the device class
     for (int x = 0; x < 5; x++){
         ui->heartRateGraph->graph(0)->addData(recordingLength - 5 + x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints().at(x) : 0);
     }
-    // Add logic to get plot points
 
+    //rescale the graph
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
 
+    //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on
     turnOnIndicator(indicator); //changes the indicator colour
+
+    //play a beep
     playBeep(); //plays a beep noise every 5 seconds (console log)
 }
 

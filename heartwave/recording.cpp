@@ -77,18 +77,8 @@ void Recording::reset(){
   3 .getLengthOfSession()
 The device may tentatively call checkIndicator() to understand what colour the indicator needs to be */
 void Recording::update(){
- //a tentative implementation for how coherence values could be generated to indicate the 5 seconds that have passed
-    for(int i = 0; i < 5; i++){
-//        int value = generateCoherenceValue();
-//        addCoherenceValue(value);
-
-    }
-//    float average = calculateCoherenceAverage(); //calculates the average of the last 64 coherence values
-//    addToCoherenceScores(average); //adds it to the queue
-//    updateAchievementScore(); //the achievement score updates
     setLengthOfSession(lengthOfSession + 5); //updates the duration to reflect the 5 seconds that have passed
-    addToPlotPoints();
-    //getCurrentDataPoints();
+    addToPlotPoints(); //adds the next 5 plot points
 }
 
 int Recording::generateCoherenceValue(){
@@ -96,27 +86,25 @@ int Recording::generateCoherenceValue(){
     return 1;
 }
 
-
-
 vector<float> Recording::getCurrentDataPoints() {
+    //reads and returns the next 5 plot points
     vector<float> points;
-    cout<<"******"<<endl;
     for(int i = 0; i < 5; i++){
      points.push_back(plotPoints.at(plotPoints.size()-1-i));
-
-     cout<< plotPoints.at(plotPoints.size()-1-i)<<endl;
     }
     return points;
 }
 
 void Recording::addToPlotPoints(){
+    //adds the next 5 plot points to the class vector
     for (int x = lengthOfSession - 5; x < lengthOfSession; x++){
         plotPoints.push_back(dataPoints->at(x));
     }
 }
 
-vector<float> Recording::getAllPlotPoints(){
-    return vector<float>(plotPoints); //due to problems with the overriding the same object, the log needs a copy.
+vector<float>* Recording::getAllPlotPoints(){
+    //returns all plot points used for the session
+    return &plotPoints;
 }
 
 

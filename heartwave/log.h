@@ -11,7 +11,7 @@ using namespace std;
 class Log
 {
 public:
-    Log(QString& date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore, vector<float> plotPoints);
+    Log(QString& date, int challengeLevel, int breathInterval, int lengthOfSession, float averageCoherence, float lowPercentage, float mediumPercentage, float highPercentage, float achievementScore, vector<float>* plotPoints);
     QString getDate();
     int getChallengeLevel();
     int getBreathInterval();

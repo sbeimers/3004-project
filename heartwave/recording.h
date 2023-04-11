@@ -25,7 +25,7 @@ public:
     int getLengthOfSession();
     float getCurrentAchievementScore();
     vector<float> getCurrentDataPoints();
-    vector<float> getAllPlotPoints();
+    vector<float>* getAllPlotPoints();
 
     //setters
     void setChallengeLevel(int); //sets the challenge level
