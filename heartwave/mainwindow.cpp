@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(sessionTimer, &QTimer::timeout, this, &MainWindow::updateSession);
     connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
     connect(batteryTimer, &QTimer::timeout, this, &MainWindow::updateBatteryLevel);
-    batteryTimer->start(1000);
+    batteryTimer->start(15000);
 
 }
 
@@ -50,7 +50,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::resetGraph(){
+void MainWindow::startSession(){
     // Start session and breath pacertimer
     sessionTimer->start(5000);
     breathTimer->start(1000);
@@ -59,6 +59,26 @@ void MainWindow::resetGraph(){
     ui->menuListWidget->hide();
     ui->heartRateGraphBox->show();
 
+    resetGraph();
+
+    // Reset breath pacer
+    ui->breathPacer->setValue(0);
+
+    //reset labels
+    ui->coherenceScoreLabel->setText(QString::number(0));
+    ui->lengthLabel->setText(QString::number(0) + " s");
+    ui->achievementScoreLabel->setText(QString::number(0));
+}
+
+void MainWindow::resetLogGraph(){
+    ui->heartRateDetailGraph->graph(0)->data()->clear();
+    ui->heartRateDetailGraph->graph(0)->addData(0, 0);
+    ui->heartRateDetailGraph->rescaleAxes();
+    ui->heartRateDetailGraph->graph(0)->data()->clear();
+    ui->heartRateDetailGraph->replot();
+}
+void MainWindow::resetGraph(){
+
     // Reset graph and rescale axes
     ui->heartRateGraph->graph(0)->data()->clear();
     ui->heartRateGraph->graph(0)->addData(0, 0);
@@ -66,8 +86,6 @@ void MainWindow::resetGraph(){
     ui->heartRateGraph->graph(0)->data()->clear();
     ui->heartRateGraph->replot();
 
-    // Reset breath pacer
-    ui->breathPacer->setValue(0);
 }
 
 void MainWindow::handlePowerButtonPress(){
@@ -152,17 +170,17 @@ void MainWindow::handleSelectButtonPress(){
     } else if (currentState == SESSION_SELECT){
         switch (menuListWidgetRow){
             case 0: // High coherence session
-                device.startSession(0); // 0 for option high... change maybe later
+                device.startSession(0);
                 break;
-            case 1:
-                //device.startSession(&mediumCoherenceDataSet);
+            case 1: //Medium coherence session
+                device.startSession(1);
                 break;
-            case 2:
-                //device.startSession(&lowCoherenceDataSet);
+            case 2: //Low coherence session
+                device.startSession(2);
                 break;
         }
 
-        resetGraph();
+        startSession();
 
         // Change device state
         device.changeMenuState(ACTIVE_SESSION);
@@ -324,14 +342,15 @@ void MainWindow::displayLog(int logNum){
 
     // Update ui details with log info
     ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
-    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel(), 'f', 1));
-    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession(), 'f', 1));
-    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore(), 'f', 1));
+    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel()+1));
+    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession() )+ QString(" sec"));
+    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore()));
     ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
     ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
     ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
     ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
 
+    resetLogGraph();
     // Update detail graph
     vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
 
@@ -349,20 +368,30 @@ void MainWindow::displayLog(int logNum){
 
 void MainWindow::updateSession(){
     device.update();
+
     int recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
     int recordingAchievementScore = device.getRecordingAchievementScore();
 
-    for (int x = recordingLength - 5; x < recordingLength; x++){
-        ui->heartRateGraph->graph(0)->addData(x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints()->at(x) : 0);
+    //logic to get the 5 plot points from the device class
+    for (int x = 0; x < 5; x++){
+        ui->heartRateGraph->graph(0)->addData(recordingLength - 5 + x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints().at(x) : 0);
     }
-    // Add logic to get plot points
 
+    //rescale the graph
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
 
+    //update labels
+    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore));
+    ui->lengthLabel->setText(QString::number(recordingLength) + " s");
+    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore));
+
+    //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on
     turnOnIndicator(indicator); //changes the indicator colour
+
+    //play a beep
     playBeep(); //plays a beep noise every 5 seconds (console log)
 }
 

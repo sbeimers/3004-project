@@ -19,42 +19,46 @@ public:
     ~Recording();
 
     //getters
-    float getCoherenceAverage();
+    float getCoherenceScore();
+    float getAverageCoherence();
     int getChallengeLevel();
     int getBreathInterval();
     int getLengthOfSession();
     float getCurrentAchievementScore();
-    vector<float>* getCurrentDataPoints();
+    vector<float> getCurrentDataPoints();
+    vector<float>* getAllPlotPoints();
 
     //setters
     void setChallengeLevel(int); //sets the challenge level
     void setBreathInterval(int); //sets the breath interval
     void setLengthOfSession(int); //adds to the duration of the session when called
     void setDataPoints(vector<float>*);
+    void setCoherenceValues(vector <float>*);
 
     //coherence logic
-    bool addCoherenceValue(float); //adds a new coherence value to the queue
-    float calculateCoherenceAverage(); //calculates coherence average over 64 seconds to come up with the coherence score, adds it to the coherenceScores vectors
-    void addToCoherenceScores(float);
-     int generateCoherenceValue(); //TODO: generates value to append to the coherenceValues queue
+    void addToCoherenceScores();
 
     //achievement score logic
     void updateAchievementScore(); //adds up all of the scores in the coherenceScores vector to update the achievement score attribute
+
+    //plot points logic
+    void addToPlotPoints();
 
     void reset();
 
     void update(); //called when 5 seconds have passed
 
+
 private:
-    vector<float> queueOfCoherenceValues; //holds 64 values only, updated every second
     vector<float> coherenceScores; //holds all coherence scores (each is calculated from the last 64 seconds), updating every 5 seconds
     vector<float> plotPoints; // Holds all y values of HR graph
-    vector<float> idealPlotDiff; // Holds difference between plot points and ideal sin wave at same time
     vector<float>* dataPoints;
+    vector<float>* coherenceDataValues;
     int challengeLevel;  // from 0-3 (ui will show level 1-4)
     int breathInterval; //holds breath interval from 0-29
     int lengthOfSession; //duration of the session
     float achievementScore;  //achievement score; sum of all coherence scores
+
 
 };
 

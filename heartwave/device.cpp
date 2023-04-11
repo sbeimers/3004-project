@@ -11,9 +11,14 @@ Device::Device(){
     challengeLevel = 0;
 
     batteryLevel = 100;// battery level
-    turnedOn = true; // determins if the device is on or off
+    turnedOn = true; // determines if the device is on or off
 
     recording = Recording();
+
+    //amount of time in each indicator state
+    lowIndicatorTime = 0;
+    mediumIndicatorTime = 0;
+    highIndicatorTime = 0;
 }
 
 Device::~Device() {
@@ -23,14 +28,27 @@ Device::~Device() {
 }
 
 void Device::startSession(int option){
+    //reset amount of time in each indicator state
+    lowIndicatorTime = 0;
+    mediumIndicatorTime = 0;
+    highIndicatorTime = 0;
+
     recording.reset();
+
     if (option == 0) {
            recording.setDataPoints(&HIGH_COHERENCE_PLOT_POINTS);
-    } // add elses for med and low
-
+           recording.setCoherenceValues(&HIGH_COHERENCE_SCORES);
+    }
+    else if(option == 1){
+        recording.setDataPoints(&MED_COHERENCE_PLOT_POINTS);
+        recording.setCoherenceValues(&MED_COHERENCE_SCORES);
+    }
+    else{
+        recording.setDataPoints(&LOW_COHERENCE_PLOT_POINTS);
+        recording.setCoherenceValues(&LOW_COHERENCE_SCORES);
+    }
     recording.setBreathInterval(breathPace);
     recording.setChallengeLevel(challengeLevel);
-
 }
 
 void Device::saveRecording() {
@@ -39,7 +57,12 @@ void Device::saveRecording() {
 
     qDebug() << "Saving Log with Date: " + formattedTime;
 
-    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), (float) 100.0, (float) 0.0, (float) 0.0, recording.getCurrentAchievementScore(), recording.getCurrentDataPoints());
+    //calculates the percentage of time spent in each indicator state
+    float lowPercentage = (float(lowIndicatorTime) / recording.getLengthOfSession()) * 100;
+    float medPercentage = (float(mediumIndicatorTime) / recording.getLengthOfSession()) * 100;
+    float highPercentage = (float(highIndicatorTime) / recording.getLengthOfSession()) * 100;
+
+    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getAverageCoherence(), lowPercentage, medPercentage, highPercentage, recording.getCurrentAchievementScore(), recording.getAllPlotPoints());
     logs.push_back(newLog);
 }
 
@@ -48,6 +71,9 @@ void Device::deleteLog(int index) {
 }
 
 void Device::restore() {
+    lowIndicatorTime = 0;
+    mediumIndicatorTime = 0;
+    highIndicatorTime = 0;
     breathPace = 9;
     challengeLevel = 0;
     turnedOn = true;
@@ -77,9 +103,9 @@ MenuState Device::getState(){ return state; }
 int Device::getBreathPace() { return breathPace; }
 int Device::getChallengeLevel() { return challengeLevel; }
 int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
-float Device::getRecordingCoherenceScore(){ return recording.getCoherenceAverage(); }
+float Device::getRecordingCoherenceScore(){ return recording.getCoherenceScore(); }
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
-vector<float>* Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
+vector<float> Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
 vector<Log*> Device::getLogs() { return logs; }
 
 //power logic
@@ -95,18 +121,16 @@ void Device::changeMenuState(MenuState state){ this->state = state; }
 
 
 //indicator logic
-//TODO: add challenge level logic
 int Device::getIndicator(){
     //indicator 0 = low (red)
     //indicator 1 = medium (blue)
     //indicator 2 = high (green)
     int indicatorNum = 0;
+    float mediumRangeLow = 0;
+    float mediumRangeHigh = 0;
 
-    //float coherence = recording.getCoherenceAverage(); //actual function call, coherence not set
-    float coherence = 1; //placeholder value for testing
+    float coherence = recording.getCoherenceScore();
 
-     float mediumRangeLow = 0;
-     float mediumRangeHigh = 0;
     if(challengeLevel == 0){
         mediumRangeLow = 0.5;
         mediumRangeHigh = 0.9;
@@ -124,14 +148,18 @@ int Device::getIndicator(){
         mediumRangeHigh = 6.0;
     }
 
+     //checks ranges and updates amount of time spent in each indicator state
     if(coherence >= mediumRangeLow && coherence <= mediumRangeHigh){
         indicatorNum = 1;
+        mediumIndicatorTime += 5;
     }
     else if(coherence < mediumRangeLow){
         indicatorNum = 0;
+        lowIndicatorTime += 5;
     }
     else{
         indicatorNum = 2;
+        highIndicatorTime += 5;
     }
     return indicatorNum;
 }

@@ -45,6 +45,8 @@ private:
     void playBeep();
     void resetIndicators();
     void endSession();
+    void startSession();
+    void resetLogGraph();
 
 private slots:
     void handleUpButtonPress();

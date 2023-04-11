@@ -4,7 +4,7 @@
 using namespace std;
 
 // ctor for log... no setters since this should never be changed after.
-Log::Log(QString& idate, int ichallengeLevel, int ibreathInterval, int ilengthOfSession, float iaverageCoherence, float ilowPercentage, float imediumPercentage, float ihighPercentage, float iachievementScore, vector<float> *iplotPoints
+Log::Log(QString& idate, int ichallengeLevel, int ibreathInterval, int ilengthOfSession, float iaverageCoherence, float ilowPercentage, float imediumPercentage, float ihighPercentage, float iachievementScore, vector<float>* iplotPoints
          ) : plotPoints(*iplotPoints) { // plot points will take the entire graph, so fix when TAs say what to do.
     date = idate;
     challengeLevel = ichallengeLevel;
