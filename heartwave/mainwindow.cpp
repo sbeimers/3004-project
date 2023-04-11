@@ -167,13 +167,13 @@ void MainWindow::handleSelectButtonPress(){
     } else if (currentState == SESSION_SELECT){
         switch (menuListWidgetRow){
             case 0: // High coherence session
-                device.startSession(0); // 0 for option high... change maybe later
+                device.startSession(0);
                 break;
-            case 1:
-                //device.startSession(&mediumCoherenceDataSet);
+            case 1: //Medium coherence session
+                device.startSession(1);
                 break;
-            case 2:
-                //device.startSession(&lowCoherenceDataSet);
+            case 2: //Low coherence session
+                device.startSession(2);
                 break;
         }
 

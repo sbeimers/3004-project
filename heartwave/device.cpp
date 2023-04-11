@@ -26,11 +26,15 @@ void Device::startSession(int option){
     recording.reset();
     if (option == 0) {
            recording.setDataPoints(&HIGH_COHERENCE_PLOT_POINTS);
-    } // add elses for med and low
-
+    }
+    else if(option == 1){
+        recording.setDataPoints(&MED_COHERENCE_PLOT_POINTS);
+    }
+    else{
+        recording.setDataPoints(&LOW_COHERENCE_PLOT_POINTS);
+    }
     recording.setBreathInterval(breathPace);
     recording.setChallengeLevel(challengeLevel);
-
 }
 
 void Device::saveRecording() {
