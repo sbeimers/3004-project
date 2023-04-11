@@ -26,12 +26,15 @@ void Device::startSession(int option){
     recording.reset();
     if (option == 0) {
            recording.setDataPoints(&HIGH_COHERENCE_PLOT_POINTS);
+           recording.setCoherenceValues(&HIGH_COHERENCE_SCORES);
     }
     else if(option == 1){
         recording.setDataPoints(&MED_COHERENCE_PLOT_POINTS);
+        recording.setCoherenceValues(&MED_COHERENCE_SCORES);
     }
     else{
         recording.setDataPoints(&LOW_COHERENCE_PLOT_POINTS);
+        recording.setCoherenceValues(&LOW_COHERENCE_SCORES);
     }
     recording.setBreathInterval(breathPace);
     recording.setChallengeLevel(challengeLevel);

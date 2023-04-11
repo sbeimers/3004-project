@@ -24,6 +24,7 @@ void Recording::setChallengeLevel(int challengeLevel){ this->challengeLevel = ch
 void Recording::setBreathInterval(int breathInterval){ this->breathInterval = breathInterval;}
 void Recording::setLengthOfSession(int duration){ this->lengthOfSession = duration; }
 void Recording::setDataPoints(vector<float>* dataPoints) { this->dataPoints = dataPoints; }
+void Recording::setCoherenceValues(vector<float> * coherenceValues) {this->coherenceValues = coherenceValues; }
 
 //this function adds a new coherence value to the queueOfCoherenceValues.
 //a coherence value is indicative of 1 second passing
