@@ -72,7 +72,8 @@ void Recording::addToCoherenceScores(){
 //returns the average coherence based off of all coherence scores during the session
 //sum of coherence scores, AKA achievement score, divided by the amount of coherence scores
 float Recording::getAverageCoherence(){
-    return float(achievementScore) / float(coherenceScores.size());
+    float average =  achievementScore / float(coherenceScores.size());
+    return average;
 }
 
 //this function updates the achievement score by looking at the last recorded coherence average and adding it to the preestablished achievement score.

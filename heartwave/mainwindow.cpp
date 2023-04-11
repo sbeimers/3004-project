@@ -369,9 +369,10 @@ void MainWindow::displayLog(int logNum){
 void MainWindow::updateSession(){
     device.update();
 
-    int recordingCoherenceScore = device.getRecordingCoherenceScore();
+    float recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
-    int recordingAchievementScore = device.getRecordingAchievementScore();
+    float recordingAchievementScore = device.getRecordingAchievementScore();
+
 
     //logic to get the 5 plot points from the device class
     for (int x = 0; x < 5; x++){
@@ -383,9 +384,9 @@ void MainWindow::updateSession(){
     ui->heartRateGraph->replot();
 
     //update labels
-    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore));
+    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore, 'f', 1));
     ui->lengthLabel->setText(QString::number(recordingLength) + " s");
-    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore));
+    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore, 'f', 1));
 
     //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on
