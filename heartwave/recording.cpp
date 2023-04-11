@@ -17,6 +17,7 @@ int Recording::getChallengeLevel(){ return challengeLevel; }
 int Recording::getBreathInterval(){ return breathInterval; }
 int Recording::getLengthOfSession(){ return lengthOfSession; }
 float Recording::getCurrentAchievementScore(){ return achievementScore; }
+vector<float>* Recording::getAllPlotPoints(){ return &plotPoints; }     //returns all plot points used for the session
 
 //setters
 void Recording::setChallengeLevel(int challengeLevel){ this->challengeLevel = challengeLevel; }
@@ -102,10 +103,6 @@ void Recording::addToPlotPoints(){
     }
 }
 
-vector<float>* Recording::getAllPlotPoints(){
-    //returns all plot points used for the session
-    return &plotPoints;
-}
 
 
 
