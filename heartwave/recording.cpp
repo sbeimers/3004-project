@@ -12,7 +12,7 @@ Recording::~Recording(){
 }
 
 //getters
-float Recording::getCoherenceAverage(){ return 0; }//coherenceScores.back(); }
+float Recording::getCoherenceAverage(){ return coherenceScores.back(); }
 int Recording::getChallengeLevel(){ return challengeLevel; }
 int Recording::getBreathInterval(){ return breathInterval; }
 int Recording::getLengthOfSession(){ return lengthOfSession; }
@@ -24,48 +24,11 @@ void Recording::setChallengeLevel(int challengeLevel){ this->challengeLevel = ch
 void Recording::setBreathInterval(int breathInterval){ this->breathInterval = breathInterval;}
 void Recording::setLengthOfSession(int duration){ this->lengthOfSession = duration; }
 void Recording::setDataPoints(vector<float>* dataPoints) { this->dataPoints = dataPoints; }
-void Recording::setCoherenceValues(vector<float> * coherenceValues) {this->coherenceValues = coherenceValues; }
-
-//this function adds a new coherence value to the queueOfCoherenceValues.
-//a coherence value is indicative of 1 second passing
-bool Recording::addCoherenceValue(float coherence){
-    //checks if queue is over 64 values, then erases the oldest value
-    if(queueOfCoherenceValues.size() >= 64){
-        queueOfCoherenceValues.erase(queueOfCoherenceValues.begin());
-    }
-
-    //adds the new value to the queue
-    queueOfCoherenceValues.push_back(coherence);
-    return true;
-}
-
-//this function calculates the coherence average (AKA score), which is the average of the last 64 seconds of coherence values, and returns the value.
-float Recording::calculateCoherenceAverage(){
-    float sum = 0;
-    for(float c: queueOfCoherenceValues){
-        sum += c;
-    }
-    float average = sum / queueOfCoherenceValues.size();
-    return average;
-}
-
-//this function appends the coherence average/score to coherenceScores.
-void Recording::addToCoherenceScores(float score){
-    coherenceScores.push_back(score);
-}
-
-//this function updates the achievement score by looking at the last recorded coherence average and adding it to the preestablished achievement score.
-//achievement score is the sum of all of the coherence scores/averages
-void Recording::updateAchievementScore(){
-       achievementScore += coherenceScores.back();
-    //currentAchievementScore is public, no need to return it
-}
+void Recording::setCoherenceValues(vector<float> * coherenceDataValues) {this->coherenceDataValues = coherenceDataValues; }
 
 void Recording::reset(){
-    queueOfCoherenceValues.clear();
     coherenceScores.clear();
     plotPoints.clear();
-    idealPlotDiff.clear();
     lengthOfSession = 0;
     achievementScore = 0;
 }
@@ -81,15 +44,12 @@ The device may tentatively call checkIndicator() to understand what colour the i
 void Recording::update(){
     setLengthOfSession(lengthOfSession + 5); //updates the duration to reflect the 5 seconds that have passed
     addToPlotPoints(); //adds the next 5 plot points
+    addToCoherenceScores();
+    updateAchievementScore();
 }
 
-int Recording::generateCoherenceValue(){
-    //TODO: create a function that will be called every 5 seconds when display needs to update. The function should be called 5 times and generate a coherence value to append to the queueOfCoherenceValue, mimicking 5 seconds passing.
-    return 1;
-}
-
+//reads and returns the next 5 plot points
 vector<float> Recording::getCurrentDataPoints() {
-    //reads and returns the next 5 plot points
     vector<float> points;
     for(int i = 0; i < 5; i++){
      points.push_back(plotPoints.at(plotPoints.size()-1-i));
@@ -97,12 +57,26 @@ vector<float> Recording::getCurrentDataPoints() {
     return points;
 }
 
+//adds the next 5 plot points to the class vector
 void Recording::addToPlotPoints(){
-    //adds the next 5 plot points to the class vector
     for (int x = lengthOfSession - 5; x < lengthOfSession; x++){
         plotPoints.push_back(dataPoints->at(x));
     }
 }
+
+//this function appends the newest coherence average/score to coherenceScores.
+void Recording::addToCoherenceScores(){
+    coherenceScores.push_back(coherenceDataValues->at(coherenceScores.size()));
+}
+
+//this function updates the achievement score by looking at the last recorded coherence average and adding it to the preestablished achievement score.
+//achievement score is the sum of all of the coherence scores/averages
+void Recording::updateAchievementScore(){
+       achievementScore += coherenceScores.back();
+}
+
+
+
 
 
 

@@ -378,6 +378,10 @@ void MainWindow::updateSession(){
     ui->heartRateGraph->rescaleAxes();
     ui->heartRateGraph->replot();
 
+    ui->coherenceScoreLabel->setText(QString::number(device.getRecordingCoherenceScore()));
+    ui->lengthLabel->setText(QString::number(device.getRecordingLength()) + " s");
+    ui->achievementScoreLabel->setText(QString::number(device.getRecordingAchievementScore()));
+
     //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on
     turnOnIndicator(indicator); //changes the indicator colour
