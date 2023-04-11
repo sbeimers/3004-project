@@ -52,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::startSession(){
     // Start session and breath pacertimer
-    sessionTimer->start(5000);
+    sessionTimer->start(1000);
     breathTimer->start(1000);
 
     // Hide menu list and show graph
@@ -345,7 +345,7 @@ void MainWindow::displayLog(int logNum){
     ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel()+1));
     ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession() )+ QString(" sec"));
     ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore()));
-    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
+    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 2));
     ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
     ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
     ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
@@ -369,9 +369,10 @@ void MainWindow::displayLog(int logNum){
 void MainWindow::updateSession(){
     device.update();
 
-    int recordingCoherenceScore = device.getRecordingCoherenceScore();
+    float recordingCoherenceScore = device.getRecordingCoherenceScore();
     int recordingLength = device.getRecordingLength();
-    int recordingAchievementScore = device.getRecordingAchievementScore();
+    float recordingAchievementScore = device.getRecordingAchievementScore();
+
 
     //logic to get the 5 plot points from the device class
     for (int x = 0; x < 5; x++){
@@ -383,9 +384,9 @@ void MainWindow::updateSession(){
     ui->heartRateGraph->replot();
 
     //update labels
-    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore));
+    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore, 'f', 1));
     ui->lengthLabel->setText(QString::number(recordingLength) + " s");
-    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore));
+    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore, 'f', 1));
 
     //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on
