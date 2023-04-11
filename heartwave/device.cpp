@@ -14,6 +14,11 @@ Device::Device(){
     turnedOn = true; // determins if the device is on or off
 
     recording = Recording();
+
+    //amount of time in each indicator state
+    lowIndicatorTime = 0;
+    mediumIndicatorTime = 0;
+    highIndicatorTime = 0;
 }
 
 Device::~Device() {
@@ -23,7 +28,13 @@ Device::~Device() {
 }
 
 void Device::startSession(int option){
+    //reset amount of time in each indicator state
+    lowIndicatorTime = 0;
+    mediumIndicatorTime = 0;
+    highIndicatorTime = 0;
+
     recording.reset();
+
     if (option == 0) {
            recording.setDataPoints(&HIGH_COHERENCE_PLOT_POINTS);
            recording.setCoherenceValues(&HIGH_COHERENCE_SCORES);
@@ -46,7 +57,12 @@ void Device::saveRecording() {
 
     qDebug() << "Saving Log with Date: " + formattedTime;
 
-    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), (float) 100.0, (float) 0.0, (float) 0.0, recording.getCurrentAchievementScore(), recording.getAllPlotPoints());
+    //calculates the percentage of time spent in each indicator state
+    float lowPercentage = (float(lowIndicatorTime) / recording.getLengthOfSession()) * 100;
+    float medPercentage = (float(mediumIndicatorTime) / recording.getLengthOfSession()) * 100;
+    float highPercentage = (float(highIndicatorTime) / recording.getLengthOfSession()) * 100;
+
+    Log* newLog = new Log(formattedTime, recording.getChallengeLevel(), recording.getBreathInterval(), recording.getLengthOfSession(), recording.getCoherenceAverage(), lowPercentage, medPercentage, highPercentage, recording.getCurrentAchievementScore(), recording.getAllPlotPoints());
     logs.push_back(newLog);
 }
 
@@ -55,6 +71,9 @@ void Device::deleteLog(int index) {
 }
 
 void Device::restore() {
+    lowIndicatorTime = 0;
+    mediumIndicatorTime = 0;
+    highIndicatorTime = 0;
     breathPace = 9;
     challengeLevel = 0;
     turnedOn = true;
@@ -102,18 +121,16 @@ void Device::changeMenuState(MenuState state){ this->state = state; }
 
 
 //indicator logic
-//TODO: add challenge level logic
 int Device::getIndicator(){
     //indicator 0 = low (red)
     //indicator 1 = medium (blue)
     //indicator 2 = high (green)
     int indicatorNum = 0;
+    float mediumRangeLow = 0;
+    float mediumRangeHigh = 0;
 
     float coherence = recording.getCoherenceAverage();
 
-
-     float mediumRangeLow = 0;
-     float mediumRangeHigh = 0;
     if(challengeLevel == 0){
         mediumRangeLow = 0.5;
         mediumRangeHigh = 0.9;
@@ -131,14 +148,18 @@ int Device::getIndicator(){
         mediumRangeHigh = 6.0;
     }
 
+     //checks ranges and updates amount of time spent in each indicator state
     if(coherence >= mediumRangeLow && coherence <= mediumRangeHigh){
         indicatorNum = 1;
+        mediumIndicatorTime += 5;
     }
     else if(coherence < mediumRangeLow){
         indicatorNum = 0;
+        lowIndicatorTime += 5;
     }
     else{
         indicatorNum = 2;
+        highIndicatorTime += 5;
     }
     return indicatorNum;
 }

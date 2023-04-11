@@ -60,6 +60,10 @@ private:
 
     int batteryLevel;
     bool turnedOn;
+
+    int lowIndicatorTime;
+    int mediumIndicatorTime;
+    int highIndicatorTime;
 };
 
 #endif // DEVICE_H

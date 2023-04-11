@@ -61,10 +61,13 @@ void MainWindow::startSession(){
 
     resetGraph();
 
-
     // Reset breath pacer
     ui->breathPacer->setValue(0);
 
+    //reset labels
+    ui->coherenceScoreLabel->setText(QString::number(0));
+    ui->lengthLabel->setText(QString::number(0) + " s");
+    ui->achievementScoreLabel->setText(QString::number(0));
 }
 
 void MainWindow::resetLogGraph(){
