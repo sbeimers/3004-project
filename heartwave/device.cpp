@@ -165,14 +165,7 @@ void Device::restore() {
     logs.clear();
 }
 
-
-
-//setters
-void Device::setBreathPace(int bp){ breathPace = bp; }
-void Device::setChallengeLevel(int cl){ challengeLevel = cl; }
-
-//getters
-
+// Getters
 int Device::getBreathPace() { return breathPace; }
 int Device::getChallengeLevel() { return challengeLevel; }
 int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
@@ -180,12 +173,6 @@ float Device::getRecordingCoherenceScore(){ return recording.getCoherenceScore()
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
 vector<float> Device::getRecordingDataPoints() { return recording.getFiveLastestPlotPoints(); }
 
-
-
-
-
-//change menu state
-
-
-
-
+// Setters
+void Device::setBreathPace(int bp){ breathPace = bp; }
+void Device::setChallengeLevel(int cl){ challengeLevel = cl; }

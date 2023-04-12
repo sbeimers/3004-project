@@ -36,7 +36,7 @@ public:
     // Restore device settings and data
     void restore();
 
-    //getters
+    // Getters
     int getBreathPace();
     int getChallengeLevel();
     int getRecordingLength();
@@ -44,7 +44,7 @@ public:
     float getRecordingAchievementScore();
     vector<float> getRecordingDataPoints();
 
-    //settters
+    // Settters
     void setBreathPace(int bp);
     void setChallengeLevel(int cl);
 

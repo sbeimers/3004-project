@@ -60,8 +60,6 @@ private:
     int breathInterval; //holds breath interval from 0-29
     int lengthOfSession; //duration of the session
     float achievementScore;  //achievement score; sum of all coherence scores
-
-
 };
 
 #endif // RECORDING_H

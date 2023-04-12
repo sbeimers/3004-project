@@ -28,7 +28,7 @@ void Recording::setCoherenceValues(vector<float> * coherenceDataValues) {this->c
 // Called every 5 seconds
 /* Device will call the following functions to update the UI
   1. getAchievementScore()
-  2. getCoherenceAverage(0
+  2. getCoherenceAverage()
   3 .getLengthOfSession() */
 void Recording::update(){
     setLengthOfSession(lengthOfSession + 5); //updates the duration to reflect the 5 seconds that have passed
@@ -78,13 +78,3 @@ void Recording::reset(){
     lengthOfSession = 0;
     achievementScore = 0;
 }
-
-
-
-
-
-
-
-
-
-

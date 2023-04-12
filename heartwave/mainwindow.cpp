@@ -511,4 +511,3 @@ void MainWindow::resetBatteryLevel() {
     ui->batteryBar->setValue(device.getBatteryLevel());
     ui->batteryBar->setStyleSheet("QProgressBar::chunk {background-color: rgb(138, 226, 52);}");
 }
-
