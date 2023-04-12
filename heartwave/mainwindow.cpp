@@ -168,17 +168,18 @@ void MainWindow::handleSelectButtonPress(){
         }
 
     } else if (currentState == SESSION_SELECT){
-        switch (menuListWidgetRow){
-            case 0: // High coherence session
-                device.startSession(0);
-                break;
-            case 1: //Medium coherence session
-                device.startSession(1);
-                break;
-            case 2: //Low coherence session
-                device.startSession(2);
-                break;
-        }
+        if(ui->applyToSkinCheckbox->isChecked()){
+            switch (menuListWidgetRow){
+                case 0: // High coherence session
+                    device.startSession(0);
+                    break;
+                case 1: //Medium coherence session
+                    device.startSession(1);
+                    break;
+                case 2: //Low coherence session
+                    device.startSession(2);
+                    break;
+            }
 
         startSession();
 
@@ -187,8 +188,13 @@ void MainWindow::handleSelectButtonPress(){
 
         // Turn on reading indicator
         ui->readingIndicator->setStyleSheet("color: red;");
+        }
+        else{
+            qDebug("Not applied to skin. Cannot start session.");
+        }
+    }
 
-    } else if (currentState == SETTINGS){
+    else if (currentState == SETTINGS){
         switch(menuListWidgetRow){
             case 0: // Change challenge level
                 updateMenuList(CHALLENGE_LEVEL);
@@ -367,6 +373,18 @@ void MainWindow::displayLog(int logNum){
 }
 
 void MainWindow::updateSession(){
+    if(!ui->applyToSkinCheckbox->isChecked()){
+        qDebug("Sensor removed from skin. Ending session.");
+        if (device.getState() == ACTIVE_SESSION){
+                endSession(); //stops timers and resets indicators
+                device.saveRecording();
+                displayLog(device.getLogs().size() - 1);
+                device.changeMenuState(SESSION_END);
+                ui->readingIndicator->setStyleSheet("color: white;");
+        }
+        return;
+    }
+
     device.update();
 
     float recordingCoherenceScore = device.getRecordingCoherenceScore();
@@ -376,7 +394,7 @@ void MainWindow::updateSession(){
 
     //logic to get the 5 plot points from the device class
     for (int x = 0; x < 5; x++){
-        ui->heartRateGraph->graph(0)->addData(recordingLength - 5 + x, ui->applyToSkinCheckbox->isChecked() ? device.getRecordingDataPoints().at(x) : 0);
+        ui->heartRateGraph->graph(0)->addData(recordingLength - 5 + x,  device.getRecordingDataPoints().at(x));
     }
 
     //rescale the graph
