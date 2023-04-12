@@ -178,7 +178,7 @@ int Device::getChallengeLevel() { return challengeLevel; }
 int Device::getRecordingLength(){ return recording.getLengthOfSession(); }
 float Device::getRecordingCoherenceScore(){ return recording.getCoherenceScore(); }
 float Device::getRecordingAchievementScore(){ return recording.getCurrentAchievementScore(); }
-vector<float> Device::getRecordingDataPoints() { return recording.getCurrentDataPoints(); }
+vector<float> Device::getRecordingDataPoints() { return recording.getFiveLastestPlotPoints(); }
 
 
 
