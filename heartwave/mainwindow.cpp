@@ -63,7 +63,7 @@ void MainWindow::startSession(){
     ui->menuListWidget->hide();
     ui->activeSessionBox->show();
 
-    resetGraph();
+    resetActiveSessionGraph();
 
     // Reset breath pacer
     ui->breathPacer->setValue(0);
@@ -84,6 +84,81 @@ void MainWindow::endSession(){
     resetIndicators();
 }
 
+// Turns on specified indicator number
+void MainWindow::turnOnIndicator(int indicatorNum){
+    resetIndicators();
+    if(indicatorNum == 0){
+        ui->coherenceRed->setStyleSheet(ui->coherenceRed->styleSheet() + "background-color: #ff5252");
+    }
+    else if(indicatorNum == 1){
+        ui->coherenceBlue->setStyleSheet(ui->coherenceBlue->styleSheet() +"background-color: #27aeff");
+    }
+    else{
+        ui->coherenceGreen->setStyleSheet(ui->coherenceGreen->styleSheet() +"background-color: #4bd67e");
+    }
+}
+
+// Changes device indicators back to their default styles
+void MainWindow::resetIndicators(){
+    ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+    ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
+}
+
+// Update menu list widget items based on device state
+void MainWindow::updateMenuList(DeviceState state){
+    // Clear listems for current widget
+    ui->menuListWidget->clear();
+
+    // UI menuListWidget items are changed depending on device state
+    if (state == HOME){
+        for (string s : homeMenuOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(0);
+
+    } else if (state == SESSION_SELECT){
+        for (string s : sessionOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(0);
+
+    } else if (state == SETTINGS){
+        for (string s : settingsMenuOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(0);
+
+    } else if (state == LOGS){
+        for (unsigned long x = 0; x < device.getLogs().size(); ++x){
+            ui->menuListWidget->addItem(QString::fromStdString(std::to_string(x + 1) + ": ") + device.getLogs().at(x)->getDate());
+        }
+        ui->menuListWidget->setCurrentRow(0);
+
+    } else if (state == CHALLENGE_LEVEL){
+        for (string s : challengeLevelOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(device.getChallengeLevel());
+
+    } else if (state == BREATH_PACER){
+        for (string s : breathPacerOptions){
+            ui->menuListWidget->addItem(QString::fromStdString(s));
+        }
+        ui->menuListWidget->setCurrentRow(device.getBreathPace());
+    }
+}
+
+// Reset active session graph and rescale axes
+void MainWindow::resetActiveSessionGraph(){
+    ui->activeSessionHeartRateGraph->graph(0)->data()->clear();
+    ui->activeSessionHeartRateGraph->graph(0)->addData(0, 0);
+    ui->activeSessionHeartRateGraph->rescaleAxes();
+    ui->activeSessionHeartRateGraph->graph(0)->data()->clear();
+    ui->activeSessionHeartRateGraph->replot();
+}
+
+// Reset log detail graph
 void MainWindow::resetLogGraph(){
     ui->logDetailHeartRateGraph->graph(0)->data()->clear();
     ui->logDetailHeartRateGraph->graph(0)->addData(0, 0);
@@ -91,37 +166,47 @@ void MainWindow::resetLogGraph(){
     ui->logDetailHeartRateGraph->graph(0)->data()->clear();
     ui->logDetailHeartRateGraph->replot();
 }
-void MainWindow::resetGraph(){
 
-    // Reset graph and rescale axes
-    ui->activeSessionHeartRateGraph->graph(0)->data()->clear();
-    ui->activeSessionHeartRateGraph->graph(0)->addData(0, 0);
-    ui->activeSessionHeartRateGraph->rescaleAxes();
-    ui->activeSessionHeartRateGraph->graph(0)->data()->clear();
-    ui->activeSessionHeartRateGraph->replot();
+// Display log detail view
+void MainWindow::displayLog(int logNum){
+    // Hide logs list and set menu list back to logs
+    ui->menuListWidget->hide();
+    ui->activeSessionBox->hide();
 
-}
+    // Get selected log
+    Log* currentLog = device.getLogs().at(logNum);
 
-void MainWindow::handlePowerButtonPress(){
-    if (device.getBatteryLevel() <= 0) { return; }
-    device.toggleOnOff();
-    DeviceState currentState = device.getState();
+    // Update ui details with log info
+    ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
+    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel()+1));
+    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession() )+ QString(" sec"));
+    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore()));
+    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
+    ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
+    ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
+    ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
 
-    if (device.getOnOffState()){
-       ui->menuListWidget->show();
-    }else{
-        if (currentState == ACTIVE_SESSION) {
-            endSession(); //stops timers and resets indicators
-            device.saveRecording();
-        }
-        updateMenuList(HOME);
-        device.changeState(HOME);
-        ui->menuListWidget->hide();
-        ui->activeSessionBox->hide();
-        ui->logDetailBox->hide();
-        ui->readingIndicator->setStyleSheet("color: white;");
+    // Update detail graph
+    resetLogGraph();
+    vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
+
+    for (int x = 0; x < currentLogPlotPoints.size(); ++x){
+        ui->logDetailHeartRateGraph->graph(0)->addData(x, currentLogPlotPoints.at(x));
     }
+
+    ui->logDetailHeartRateGraph->rescaleAxes();
+    ui->logDetailHeartRateGraph->replot();
+
+    // Show log detail box
+    ui->logDetailBox->show();
+    ui->detailSaveDelList->setCurrentRow(0);
 }
+
+// Console logs a beep every 5 seconds during an active session
+void MainWindow::playBeep(){
+    cout<<"Beep."<<endl;
+}
+
 
 void MainWindow::handleUpButtonPress(){
     if (device.getOnOffState() == false) { return; }
@@ -130,6 +215,7 @@ void MainWindow::handleUpButtonPress(){
     int currentRow;
     int lastIndex;
 
+    // Current row index wraps
     if (currentState == LOG || currentState == SESSION_END){
         currentRow = ui->detailSaveDelList->currentRow();
         lastIndex = ui->detailSaveDelList->count();
@@ -161,10 +247,12 @@ void MainWindow::handleDownButtonPress(){
 
 void MainWindow::handleSelectButtonPress(){
     if (device.getOnOffState() == false) { return; }
+
     DeviceState currentState = device.getState();
     int menuListWidgetRow = ui->menuListWidget->currentRow();
     int saveDelListRow = ui->detailSaveDelList->currentRow();
 
+    // Select button behavior changes depending on device state
     if (currentState == HOME){
         switch(menuListWidgetRow){
             case 0: // Start new session
@@ -180,7 +268,6 @@ void MainWindow::handleSelectButtonPress(){
                 device.changeState(LOGS);
                 break;
         }
-
     } else if (currentState == SESSION_SELECT){
         if(ui->applyToSkinCheckbox->isChecked()){
             switch (menuListWidgetRow){
@@ -227,17 +314,20 @@ void MainWindow::handleSelectButtonPress(){
         }
 
     } else if (currentState == CHALLENGE_LEVEL){
+         // Update challenge level
          device.setChallengeLevel(menuListWidgetRow);
          updateMenuList(SETTINGS);
          device.changeState(SETTINGS);
 
     } else if (currentState == BREATH_PACER){
+         // Update breath pace rate
          device.setBreathPace(menuListWidgetRow);
          ui->breathPacer->setMaximum(device.getBreathPace());
          updateMenuList(SETTINGS);
          device.changeState(SETTINGS);
 
     } else if (currentState == LOGS){
+        // Display single log
         device.changeState(LOG);
         displayLog(menuListWidgetRow);
 
@@ -263,13 +353,15 @@ void MainWindow::handleSelectButtonPress(){
         ui->menuListWidget->show();
         updateMenuList(LOGS);
     }
-
 }
 
 void MainWindow::handleBackButtonPress(){
     if (device.getOnOffState() == false) { return; }
     DeviceState currentState = device.getState();
 
+    // Every state is only accessible via exactly one other state
+    // Because of this, by getting the current state of the device
+    // we always know the state before it to revert back to
     if (currentState == SESSION_SELECT || currentState == SETTINGS || currentState == LOGS){
         updateMenuList(HOME);
         device.changeState(HOME);
@@ -296,8 +388,11 @@ void MainWindow::handleBackButtonPress(){
 }
 
 void MainWindow::handleMenuButtonPress(){
+    // Menu button always reverts device back to home state
     if (device.getOnOffState() == false) { return; }
     DeviceState currentState = device.getState();
+
+    // If active session is in progress, session is ended first
     if (currentState == ACTIVE_SESSION){
         endSession(); //stops timers and resets indicators
         device.saveRecording();
@@ -311,82 +406,34 @@ void MainWindow::handleMenuButtonPress(){
     device.changeState(HOME);
 }
 
-void MainWindow::updateMenuList(DeviceState state){
-    ui->menuListWidget->clear();
+void MainWindow::handlePowerButtonPress(){
+    // Device turns of and reverts back to home state
+    if (device.getBatteryLevel() <= 0) { return; }
+    device.toggleOnOff();
+    DeviceState currentState = device.getState();
 
-    // This can be changed to a switch case if we want, I don't see a reason to -Elias
-    if (state == HOME){
-        for (string s : homeMenuOptions){
-            ui->menuListWidget->addItem(QString::fromStdString(s));
+    // If device is off, it turns on
+    // Otherwise, if device is turned off during an active session
+    // session is ended and device turns off
+    if (device.getOnOffState()){
+       ui->menuListWidget->show();
+    }else{
+        if (currentState == ACTIVE_SESSION) {
+            endSession(); //stops timers and resets indicators
+            device.saveRecording();
         }
-        ui->menuListWidget->setCurrentRow(0);
-    } else if (state == SESSION_SELECT){
-        for (string s : sessionOptions){
-            ui->menuListWidget->addItem(QString::fromStdString(s));
-        }
-        ui->menuListWidget->setCurrentRow(0);
-    }else if (state == SETTINGS){
-        for (string s : settingsMenuOptions){
-            ui->menuListWidget->addItem(QString::fromStdString(s));
-        }
-        ui->menuListWidget->setCurrentRow(0);
-    } else if (state == LOGS){
-        for (int x = 0; x < device.getLogs().size(); ++x){
-            ui->menuListWidget->addItem(QString::fromStdString(std::to_string(x + 1) + ": ") + device.getLogs().at(x)->getDate());
-        }
-        ui->menuListWidget->setCurrentRow(0);
-    } else if (state == ACTIVE_SESSION){
-        // TODO: Figure out how we should display sessions
-        ui->menuListWidget->addItem("One must imagine a session here");
-        ui->menuListWidget->setCurrentRow(0);
-    } else if (state == CHALLENGE_LEVEL){
-        for (string s : challengeLevelOptions){
-            ui->menuListWidget->addItem(QString::fromStdString(s));
-        }
-        ui->menuListWidget->setCurrentRow(device.getChallengeLevel());
-    } else if (state == BREATH_PACER){
-        for (string s : breathPacerOptions){
-            ui->menuListWidget->addItem(QString::fromStdString(s));
-        }
-        ui->menuListWidget->setCurrentRow(device.getBreathPace());
+        updateMenuList(HOME);
+        device.changeState(HOME);
+        ui->menuListWidget->hide();
+        ui->activeSessionBox->hide();
+        ui->logDetailBox->hide();
+        ui->readingIndicator->setStyleSheet("color: white;");
     }
 }
 
-void MainWindow::displayLog(int logNum){
-    // Hide logs list and set menu list back to logs
-    ui->menuListWidget->hide();
-    ui->activeSessionBox->hide();
-
-    // Get selected log
-    Log* currentLog = device.getLogs().at(logNum);
-
-    // Update ui details with log info
-    ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
-    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel()+1));
-    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession() )+ QString(" sec"));
-    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore()));
-    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
-    ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
-    ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
-    ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
-
-    resetLogGraph();
-    // Update detail graph
-    vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
-
-    for (int x = 0; x < currentLogPlotPoints.size(); ++x){
-        ui->logDetailHeartRateGraph->graph(0)->addData(x, currentLogPlotPoints.at(x));
-    }
-
-    ui->logDetailHeartRateGraph->rescaleAxes();
-    ui->logDetailHeartRateGraph->replot();
-
-    // Show log detail box
-    ui->logDetailBox->show();
-    ui->detailSaveDelList->setCurrentRow(0);
-}
-
+// Called by sessionTimer every 5 seconds during an active session
 void MainWindow::updateSession(){
+    // If device is not applied to skin on update, session ends
     if(!ui->applyToSkinCheckbox->isChecked()){
         qDebug("Sensor removed from skin. Ending session.");
         if (device.getState() == ACTIVE_SESSION){
@@ -399,6 +446,7 @@ void MainWindow::updateSession(){
         return;
     }
 
+    // Updates readings in recording
     device.update();
 
     float recordingCoherenceScore = device.getRecordingCoherenceScore();
@@ -421,20 +469,21 @@ void MainWindow::updateSession(){
     ui->activeSessionAchievementScoreLabel->setText(QString::number(recordingAchievementScore, 'f', 1));
 
     //turn on an indicator
-     int indicator = device.getIndicator(); //gets the indicator number to turn on
+    int indicator = device.getIndicator(); //gets the indicator number to turn on
     turnOnIndicator(indicator); //changes the indicator colour
 
     //play a beep
     playBeep(); //plays a beep noise every 5 seconds (console log)
 }
 
-
+// Called by breathTimer every x seconds where x is set by the user on the device
 void MainWindow::updateBreathPace(){
     int currentValue = ui->breathPacer->value();
     int maxValue = ui->breathPacer->maximum();
     ui->breathPacer->setValue(currentValue == maxValue ? 0 : currentValue + 1);
 }
 
+// Called by batteryTimer every 15 seconds
 void MainWindow::updateBatteryLevel() {
     int batteryTick = 2;
     if (device.getOnOffState() == true) {
@@ -461,31 +510,5 @@ void MainWindow::resetBatteryLevel() {
     device.resetBatteryLevel();
     ui->batteryBar->setValue(device.getBatteryLevel());
     ui->batteryBar->setStyleSheet("QProgressBar::chunk {background-color: rgb(138, 226, 52);}");
-}
-
-//turns on specified indicator number
-void MainWindow::turnOnIndicator(int indicatorNum){
-    resetIndicators();
-    if(indicatorNum == 0){
-        ui->coherenceRed->setStyleSheet (ui->coherenceRed->styleSheet() + "background-color: #ff5252");
-    }
-    else if(indicatorNum == 1){
-        ui->coherenceBlue->setStyleSheet(ui->coherenceBlue->styleSheet() +"background-color: #27aeff");
-    }
-    else{
-        ui->coherenceGreen->setStyleSheet(ui->coherenceGreen->styleSheet() +"background-color: #4bd67e");
-    }
-}
-
-//console logs a beep every 5 seconds
-void MainWindow::playBeep(){
-    cout<<"Beep."<<endl;
-}
-
-//changes the indicators back to their default styles
-void MainWindow::resetIndicators(){
-    ui->coherenceRed->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
-    ui->coherenceBlue->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
-    ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
 }
 

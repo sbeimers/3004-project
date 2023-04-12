@@ -38,21 +38,26 @@ private:
     QTimer* breathTimer;
     QTimer* batteryTimer;
 
+    // Session logic
     void startSession();
     void endSession();
-
-    void resetGraph();
-    void updateMenuList(DeviceState state);
-    void displayLog(int logNum);
-
     void turnOnIndicator(int indicatorNum);
-    void playBeep();
     void resetIndicators();
 
+    // Updates UI menu lists
+    void updateMenuList(DeviceState state);
 
+    // UI graph logic
+    void resetActiveSessionGraph();
     void resetLogGraph();
 
+    // Display log detail view
+    void displayLog(int logNum);
+
+    void playBeep();
+
 private slots:
+    // Button press hhandlers
     void handleUpButtonPress();
     void handleDownButtonPress();
     void handleSelectButtonPress();
