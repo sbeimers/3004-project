@@ -243,7 +243,7 @@ border-color: black;</string>
     <property name="title">
      <string>Log summary: </string>
     </property>
-    <widget class="QCustomPlot" name="heartRateDetailGraph" native="true">
+    <widget class="QCustomPlot" name="logDetailHeartRateGraph" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -378,7 +378,7 @@ border-color: black;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="heartRateGraphBox">
+   <widget class="QGroupBox" name="activeSessionBox">
     <property name="geometry">
      <rect>
       <x>55</x>
@@ -393,7 +393,7 @@ border-color: black;</string>
     <property name="title">
      <string>Coherence                    Length                  Achievement</string>
     </property>
-    <widget class="QCustomPlot" name="heartRateGraph" native="true">
+    <widget class="QCustomPlot" name="activeSessionHeartRateGraph" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -406,7 +406,7 @@ border-color: black;</string>
       <string notr="true"/>
      </property>
     </widget>
-    <widget class="QLabel" name="coherenceScoreLabel">
+    <widget class="QLabel" name="activeSessionCoherenceScoreLabel">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -425,7 +425,7 @@ border-color: black;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lengthLabel">
+    <widget class="QLabel" name="activeSessionLengthLabel">
      <property name="geometry">
       <rect>
        <x>110</x>
@@ -444,7 +444,7 @@ border-color: black;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="achievementScoreLabel">
+    <widget class="QLabel" name="activeSessionAchievementScoreLabel">
      <property name="geometry">
       <rect>
        <x>214</x>
@@ -566,7 +566,7 @@ border-color: black;</string>
    <zorder>powerButton</zorder>
    <zorder>menuListWidget</zorder>
    <zorder>logDetailBox</zorder>
-   <zorder>heartRateGraphBox</zorder>
+   <zorder>activeSessionBox</zorder>
    <zorder>backButton</zorder>
    <zorder>menuButton</zorder>
    <zorder>applyToSkinCheckbox</zorder>

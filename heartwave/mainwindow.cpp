@@ -7,22 +7,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Vectors of strings containing menu options for different screens
     homeMenuOptions = {"START NEW SESSION", "SETTINGS", "VIEW HISTORY"};
     sessionOptions = {"Start High Coherence Session Simulation", "Start Medium Coherence Session Simulation", "Start Low Coherence Session Simulation"};
     settingsMenuOptions = {"CHANGE CHALLENGE LEVEL", "CHANGE BREATH PACER INTERVAL", "RESTORE DEVICE"};
     breathPacerOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
     challengeLevelOptions = {"1", "2", "3", "4"};
 
+    // Device initially shows home menu so home menu options are added
     for (string s : homeMenuOptions){
         ui->menuListWidget->addItem(QString::fromStdString(s));
     }
 
     ui->menuListWidget->setCurrentRow(0);
 
-    ui->heartRateGraph->addGraph();
-    ui->heartRateGraphBox->hide();
+    // activeSessionBox contains all UI elements related to active session reading
+    ui->activeSessionHeartRateGraph->addGraph(); // Graphs from qtcustomplot need to be added manually
+    ui->activeSessionBox->hide();
 
-    ui->heartRateDetailGraph->addGraph();
+    // logDetailBox contains all UI elements related to log details
+    ui->logDetailHeartRateGraph->addGraph();
     ui->detailSaveDelList->addItem("RETURN");
     ui->detailSaveDelList->addItem("DELETE");
     ui->logDetailBox->hide();
@@ -42,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
     connect(batteryTimer, &QTimer::timeout, this, &MainWindow::updateBatteryLevel);
     batteryTimer->start(15000);
-
 }
 
 MainWindow::~MainWindow()
@@ -50,6 +53,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Start session logic
 void MainWindow::startSession(){
     // Start session and breath pacertimer
     sessionTimer->start(5000);
@@ -57,7 +61,7 @@ void MainWindow::startSession(){
 
     // Hide menu list and show graph
     ui->menuListWidget->hide();
-    ui->heartRateGraphBox->show();
+    ui->activeSessionBox->show();
 
     resetGraph();
 
@@ -65,33 +69,43 @@ void MainWindow::startSession(){
     ui->breathPacer->setValue(0);
 
     //reset labels
-    ui->coherenceScoreLabel->setText(QString::number(0));
-    ui->lengthLabel->setText(QString::number(0) + " s");
-    ui->achievementScoreLabel->setText(QString::number(0));
+    ui->activeSessionCoherenceScoreLabel->setText(QString::number(0));
+    ui->activeSessionLengthLabel->setText(QString::number(0) + " s");
+    ui->activeSessionAchievementScoreLabel->setText(QString::number(0));
+}
+
+// End session logic
+// Stops all timers and resets indicators
+// Called when menu, back, or select button is pressed during active session or when
+// device is removed from skin during active session.
+void MainWindow::endSession(){
+    sessionTimer->stop();
+    breathTimer->stop();
+    resetIndicators();
 }
 
 void MainWindow::resetLogGraph(){
-    ui->heartRateDetailGraph->graph(0)->data()->clear();
-    ui->heartRateDetailGraph->graph(0)->addData(0, 0);
-    ui->heartRateDetailGraph->rescaleAxes();
-    ui->heartRateDetailGraph->graph(0)->data()->clear();
-    ui->heartRateDetailGraph->replot();
+    ui->logDetailHeartRateGraph->graph(0)->data()->clear();
+    ui->logDetailHeartRateGraph->graph(0)->addData(0, 0);
+    ui->logDetailHeartRateGraph->rescaleAxes();
+    ui->logDetailHeartRateGraph->graph(0)->data()->clear();
+    ui->logDetailHeartRateGraph->replot();
 }
 void MainWindow::resetGraph(){
 
     // Reset graph and rescale axes
-    ui->heartRateGraph->graph(0)->data()->clear();
-    ui->heartRateGraph->graph(0)->addData(0, 0);
-    ui->heartRateGraph->rescaleAxes();
-    ui->heartRateGraph->graph(0)->data()->clear();
-    ui->heartRateGraph->replot();
+    ui->activeSessionHeartRateGraph->graph(0)->data()->clear();
+    ui->activeSessionHeartRateGraph->graph(0)->addData(0, 0);
+    ui->activeSessionHeartRateGraph->rescaleAxes();
+    ui->activeSessionHeartRateGraph->graph(0)->data()->clear();
+    ui->activeSessionHeartRateGraph->replot();
 
 }
 
 void MainWindow::handlePowerButtonPress(){
     if (device.getBatteryLevel() <= 0) { return; }
     device.toggleOnOff();
-    MenuState currentState = device.getState();
+    DeviceState currentState = device.getState();
 
     if (device.getOnOffState()){
        ui->menuListWidget->show();
@@ -101,9 +115,9 @@ void MainWindow::handlePowerButtonPress(){
             device.saveRecording();
         }
         updateMenuList(HOME);
-        device.changeMenuState(HOME);
+        device.changeState(HOME);
         ui->menuListWidget->hide();
-        ui->heartRateGraphBox->hide();
+        ui->activeSessionBox->hide();
         ui->logDetailBox->hide();
         ui->readingIndicator->setStyleSheet("color: white;");
     }
@@ -111,7 +125,7 @@ void MainWindow::handlePowerButtonPress(){
 
 void MainWindow::handleUpButtonPress(){
     if (device.getOnOffState() == false) { return; }
-    MenuState currentState = device.getState();
+    DeviceState currentState = device.getState();
 
     int currentRow;
     int lastIndex;
@@ -129,7 +143,7 @@ void MainWindow::handleUpButtonPress(){
 
 void MainWindow::handleDownButtonPress(){
     if (device.getOnOffState() == false) { return; }
-    MenuState currentState = device.getState();
+    DeviceState currentState = device.getState();
 
     int currentRow;
     int lastIndex;
@@ -147,7 +161,7 @@ void MainWindow::handleDownButtonPress(){
 
 void MainWindow::handleSelectButtonPress(){
     if (device.getOnOffState() == false) { return; }
-    MenuState currentState = device.getState();
+    DeviceState currentState = device.getState();
     int menuListWidgetRow = ui->menuListWidget->currentRow();
     int saveDelListRow = ui->detailSaveDelList->currentRow();
 
@@ -155,15 +169,15 @@ void MainWindow::handleSelectButtonPress(){
         switch(menuListWidgetRow){
             case 0: // Start new session
                 updateMenuList(SESSION_SELECT);
-                device.changeMenuState(SESSION_SELECT);
+                device.changeState(SESSION_SELECT);
                 break;
             case 1: // Settings
                 updateMenuList(SETTINGS);
-                device.changeMenuState(SETTINGS);
+                device.changeState(SETTINGS);
                 break;
             case 2: //View history
                 updateMenuList(LOGS);
-                device.changeMenuState(LOGS);
+                device.changeState(LOGS);
                 break;
         }
 
@@ -184,7 +198,7 @@ void MainWindow::handleSelectButtonPress(){
         startSession();
 
         // Change device state
-        device.changeMenuState(ACTIVE_SESSION);
+        device.changeState(ACTIVE_SESSION);
 
         // Turn on reading indicator
         ui->readingIndicator->setStyleSheet("color: red;");
@@ -198,16 +212,16 @@ void MainWindow::handleSelectButtonPress(){
         switch(menuListWidgetRow){
             case 0: // Change challenge level
                 updateMenuList(CHALLENGE_LEVEL);
-                device.changeMenuState(CHALLENGE_LEVEL);
+                device.changeState(CHALLENGE_LEVEL);
                 break;
             case 1: // Breath pacer
                 updateMenuList(BREATH_PACER);
-                device.changeMenuState(BREATH_PACER);
+                device.changeState(BREATH_PACER);
                 break;
             case 2: // restore device
                 device.restore();
                 updateMenuList(HOME);
-                device.changeMenuState(HOME);
+                device.changeState(HOME);
                 ui->breathPacer->setMaximum(device.getBreathPace());
                 break;
         }
@@ -215,28 +229,28 @@ void MainWindow::handleSelectButtonPress(){
     } else if (currentState == CHALLENGE_LEVEL){
          device.setChallengeLevel(menuListWidgetRow);
          updateMenuList(SETTINGS);
-         device.changeMenuState(SETTINGS);
+         device.changeState(SETTINGS);
 
     } else if (currentState == BREATH_PACER){
          device.setBreathPace(menuListWidgetRow);
          ui->breathPacer->setMaximum(device.getBreathPace());
          updateMenuList(SETTINGS);
-         device.changeMenuState(SETTINGS);
+         device.changeState(SETTINGS);
 
     } else if (currentState == LOGS){
-        device.changeMenuState(LOG);
+        device.changeState(LOG);
         displayLog(menuListWidgetRow);
 
     } else if (currentState == ACTIVE_SESSION){
         endSession(); //stops timers and resets indicators
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
-        device.changeMenuState(SESSION_END);
+        device.changeState(SESSION_END);
         ui->readingIndicator->setStyleSheet("color: white;");
 
     } else if (currentState == SESSION_END){
         if (saveDelListRow == 1){ device.deleteLog(device.getLogs().size() - 1); }
-        device.changeMenuState(SESSION_SELECT);
+        device.changeState(SESSION_SELECT);
         ui->logDetailBox->hide();
         ui->menuListWidget->show();
         updateMenuList(SESSION_SELECT);
@@ -244,7 +258,7 @@ void MainWindow::handleSelectButtonPress(){
     } else if (currentState == LOG){
         QString uiDateStr = ui->logDetailBox->title();
         if (saveDelListRow == 1){ device.deleteLog(device.getLogIndexByDate(uiDateStr)); }
-        device.changeMenuState(LOGS);
+        device.changeState(LOGS);
         ui->logDetailBox->hide();
         ui->menuListWidget->show();
         updateMenuList(LOGS);
@@ -254,28 +268,28 @@ void MainWindow::handleSelectButtonPress(){
 
 void MainWindow::handleBackButtonPress(){
     if (device.getOnOffState() == false) { return; }
-    MenuState currentState = device.getState();
+    DeviceState currentState = device.getState();
 
     if (currentState == SESSION_SELECT || currentState == SETTINGS || currentState == LOGS){
         updateMenuList(HOME);
-        device.changeMenuState(HOME);
+        device.changeState(HOME);
     } else if (currentState == CHALLENGE_LEVEL || currentState == BREATH_PACER){
         updateMenuList(SETTINGS);
-        device.changeMenuState(SETTINGS);
+        device.changeState(SETTINGS);
     } else if (currentState == LOG){
         ui->logDetailBox->hide();
         ui->menuListWidget->show();
         updateMenuList(LOGS);
-        device.changeMenuState(LOGS);
+        device.changeState(LOGS);
     } else if (currentState == ACTIVE_SESSION){
         endSession(); //stops timers and resets indicators
         device.saveRecording();
         displayLog(device.getLogs().size() - 1);
-        device.changeMenuState(SESSION_END);
+        device.changeState(SESSION_END);
         ui->readingIndicator->setStyleSheet("color: white;");
     } else if (currentState == SESSION_END){
         updateMenuList(SESSION_SELECT);
-        device.changeMenuState(SESSION_SELECT);
+        device.changeState(SESSION_SELECT);
         ui->logDetailBox->hide();
         ui->menuListWidget->show();
     }
@@ -283,21 +297,21 @@ void MainWindow::handleBackButtonPress(){
 
 void MainWindow::handleMenuButtonPress(){
     if (device.getOnOffState() == false) { return; }
-    MenuState currentState = device.getState();
+    DeviceState currentState = device.getState();
     if (currentState == ACTIVE_SESSION){
         endSession(); //stops timers and resets indicators
         device.saveRecording();
-        ui->heartRateGraphBox->hide();
+        ui->activeSessionBox->hide();
         ui->readingIndicator->setStyleSheet("color: white;");
     } else if (currentState == SESSION_END || currentState == LOG){
         ui->logDetailBox->hide();
     }
     ui->menuListWidget->show();
     updateMenuList(HOME);
-    device.changeMenuState(HOME);
+    device.changeState(HOME);
 }
 
-void MainWindow::updateMenuList(MenuState state){
+void MainWindow::updateMenuList(DeviceState state){
     ui->menuListWidget->clear();
 
     // This can be changed to a switch case if we want, I don't see a reason to -Elias
@@ -341,7 +355,7 @@ void MainWindow::updateMenuList(MenuState state){
 void MainWindow::displayLog(int logNum){
     // Hide logs list and set menu list back to logs
     ui->menuListWidget->hide();
-    ui->heartRateGraphBox->hide();
+    ui->activeSessionBox->hide();
 
     // Get selected log
     Log* currentLog = device.getLogs().at(logNum);
@@ -361,11 +375,11 @@ void MainWindow::displayLog(int logNum){
     vector<float> currentLogPlotPoints = currentLog->getPlotPoints();
 
     for (int x = 0; x < currentLogPlotPoints.size(); ++x){
-        ui->heartRateDetailGraph->graph(0)->addData(x, currentLogPlotPoints.at(x));
+        ui->logDetailHeartRateGraph->graph(0)->addData(x, currentLogPlotPoints.at(x));
     }
 
-    ui->heartRateDetailGraph->rescaleAxes();
-    ui->heartRateDetailGraph->replot();
+    ui->logDetailHeartRateGraph->rescaleAxes();
+    ui->logDetailHeartRateGraph->replot();
 
     // Show log detail box
     ui->logDetailBox->show();
@@ -379,7 +393,7 @@ void MainWindow::updateSession(){
                 endSession(); //stops timers and resets indicators
                 device.saveRecording();
                 displayLog(device.getLogs().size() - 1);
-                device.changeMenuState(SESSION_END);
+                device.changeState(SESSION_END);
                 ui->readingIndicator->setStyleSheet("color: white;");
         }
         return;
@@ -394,17 +408,17 @@ void MainWindow::updateSession(){
 
     //logic to get the 5 plot points from the device class
     for (int x = 0; x < 5; x++){
-        ui->heartRateGraph->graph(0)->addData(recordingLength - 5 + x,  device.getRecordingDataPoints().at(x));
+        ui->activeSessionHeartRateGraph->graph(0)->addData(recordingLength - 5 + x,  device.getRecordingDataPoints().at(x));
     }
 
     //rescale the graph
-    ui->heartRateGraph->rescaleAxes();
-    ui->heartRateGraph->replot();
+    ui->activeSessionHeartRateGraph->rescaleAxes();
+    ui->activeSessionHeartRateGraph->replot();
 
     //update labels
-    ui->coherenceScoreLabel->setText(QString::number(recordingCoherenceScore, 'f', 1));
-    ui->lengthLabel->setText(QString::number(recordingLength) + " s");
-    ui->achievementScoreLabel->setText(QString::number(recordingAchievementScore, 'f', 1));
+    ui->activeSessionCoherenceScoreLabel->setText(QString::number(recordingCoherenceScore, 'f', 1));
+    ui->activeSessionLengthLabel->setText(QString::number(recordingLength) + " s");
+    ui->activeSessionAchievementScoreLabel->setText(QString::number(recordingAchievementScore, 'f', 1));
 
     //turn on an indicator
      int indicator = device.getIndicator(); //gets the indicator number to turn on
@@ -475,9 +489,3 @@ void MainWindow::resetIndicators(){
     ui->coherenceGreen->setStyleSheet("border-width: 1; border-radius: 10; border-style: solid; border-color: white;");
 }
 
-//ends the session: stops all timers and resets indicators. called when menu, back, or select button is pressed during active session.
-void MainWindow::endSession(){
-    sessionTimer->stop();
-    breathTimer->stop();
-    resetIndicators();
-}
