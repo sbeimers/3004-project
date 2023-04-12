@@ -274,7 +274,7 @@ border-color: black;</string>
       <rect>
        <x>10</x>
        <y>50</y>
-       <width>121</width>
+       <width>140</width>
        <height>17</height>
       </rect>
      </property>
@@ -311,18 +311,17 @@ border-color: black;</string>
     <widget class="QLabel" name="percentTimeLabel">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>150</x>
        <y>30</y>
-       <width>101</width>
-       <height>31</height>
+       <width>141</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="midLineWidth">
       <number>0</number>
      </property>
      <property name="text">
-      <string>% of time spent in 
- coherence states</string>
+      <string>Time in Indicator States</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -331,9 +330,9 @@ border-color: black;</string>
     <widget class="QLabel" name="detailLowLabel">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>70</y>
-       <width>71</width>
+       <x>190</x>
+       <y>50</y>
+       <width>80</width>
        <height>17</height>
       </rect>
      </property>
@@ -344,9 +343,9 @@ border-color: black;</string>
     <widget class="QLabel" name="detailMedLabel">
      <property name="geometry">
       <rect>
-       <x>230</x>
+       <x>190</x>
        <y>70</y>
-       <width>71</width>
+       <width>80</width>
        <height>17</height>
       </rect>
      </property>
@@ -357,9 +356,9 @@ border-color: black;</string>
     <widget class="QLabel" name="detailHighLabel">
      <property name="geometry">
       <rect>
-       <x>230</x>
+       <x>190</x>
        <y>90</y>
-       <width>71</width>
+       <width>80</width>
        <height>17</height>
       </rect>
      </property>
