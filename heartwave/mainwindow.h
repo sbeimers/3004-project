@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "device.h"
-#include "menustate.h"
+#include "devicestate.h"
 #include <QTimer>
 
 QT_BEGIN_NAMESPACE
@@ -27,9 +27,6 @@ public:
 private:
     Ui::MainWindow *ui;
     Device device;
-    QTimer* sessionTimer;
-    QTimer* breathTimer;
-    QTimer* batteryTimer;
 
     vector<string> homeMenuOptions;
     vector<string> sessionOptions;
@@ -37,18 +34,30 @@ private:
     vector<string> breathPacerOptions;
     vector<string> challengeLevelOptions;
 
-    void resetGraph();
-    void updateMenuList(MenuState state);
-    void displayLog(int logNum);
+    QTimer* sessionTimer;
+    QTimer* breathTimer;
+    QTimer* batteryTimer;
 
-    void turnOnIndicator(int indicatorNum);
-    void playBeep();
-    void resetIndicators();
-    void endSession();
+    // Session logic
     void startSession();
+    void endSession();
+    void turnOnIndicator(int indicatorNum);
+    void resetIndicators();
+
+    // Updates UI menu lists
+    void updateMenuList(DeviceState state);
+
+    // UI graph logic
+    void resetActiveSessionGraph();
     void resetLogGraph();
 
+    // Display log detail view
+    void displayLog(int logNum);
+
+    void playBeep();
+
 private slots:
+    // Button press hhandlers
     void handleUpButtonPress();
     void handleDownButtonPress();
     void handleSelectButtonPress();

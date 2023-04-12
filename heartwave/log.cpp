@@ -29,4 +29,3 @@ float Log::getMediumPercentage() { return mediumPercentage; }
 float Log::getHighPercentage() { return highPercentage; }
 float Log::getAchievementScore() { return achievementScore; }
 vector<float> Log::getPlotPoints() { return plotPoints; }
-

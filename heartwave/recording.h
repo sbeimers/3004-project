@@ -18,36 +18,38 @@ public:
     Recording(int challengeLevel = 0, int breathInterval = 9);
     ~Recording();
 
-    //getters
+    // Getters
     float getCoherenceScore();
     float getAverageCoherence();
     int getChallengeLevel();
     int getBreathInterval();
     int getLengthOfSession();
     float getCurrentAchievementScore();
-    vector<float> getCurrentDataPoints();
     vector<float>* getAllPlotPoints();
 
-    //setters
+
+    // Setters
     void setChallengeLevel(int); //sets the challenge level
     void setBreathInterval(int); //sets the breath interval
     void setLengthOfSession(int); //adds to the duration of the session when called
     void setDataPoints(vector<float>*);
     void setCoherenceValues(vector <float>*);
 
-    //coherence logic
-    void addToCoherenceScores();
+    // Update recording
+    void update();
+    vector<float> getFiveLastestPlotPoints();
 
-    //achievement score logic
-    void updateAchievementScore(); //adds up all of the scores in the coherenceScores vector to update the achievement score attribute
-
-    //plot points logic
+    // Plot points logic
     void addToPlotPoints();
 
+    // Coherence logic
+    void addToCoherenceScores();
+
+    // Achievement score logic
+    void updateAchievementScore(); //adds up all of the scores in the coherenceScores vector to update the achievement score attribute
+
+    // Reset recording
     void reset();
-
-    void update(); //called when 5 seconds have passed
-
 
 private:
     vector<float> coherenceScores; //holds all coherence scores (each is calculated from the last 64 seconds), updating every 5 seconds
@@ -58,8 +60,6 @@ private:
     int breathInterval; //holds breath interval from 0-29
     int lengthOfSession; //duration of the session
     float achievementScore;  //achievement score; sum of all coherence scores
-
-
 };
 
 #endif // RECORDING_H

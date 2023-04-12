@@ -3,7 +3,7 @@
 
 #include "recording.h"
 #include "log.h"
-#include "menustate.h"
+#include "devicestate.h"
 
 class Device
 {
@@ -11,50 +11,48 @@ public:
     Device();
     ~Device();
 
-    //getters
-    int getBreathPace();
-    int getChallengeLevel();
-    vector<Log*> getLogs();
-    int getLogIndexByDate(QString);
+    // State logic
+    void changeState(DeviceState state);
+    DeviceState getState();
+
+    // Session logic
     void startSession(int option);
     void update();
+    void saveRecording();
+    int getIndicator();
 
-
-    //settters
-    void setBreathPace(int bp);
-    void setChallengeLevel(int cl);
-
-    //device power and battery logic
+    // Device power and battery logic
     void toggleOnOff();
     bool getOnOffState();
-    int getBatteryLevel(); // returns battery level
-    void resetBatteryLevel();// resets battery level
+    int getBatteryLevel();
+    void resetBatteryLevel();
     void setBatteryLevel(int);
 
-    //menu logic
-    void changeMenuState(MenuState state);
-    MenuState getState();
+    // Log history logic
+    vector<Log*> getLogs();
+    int getLogIndexByDate(QString);
+    void deleteLog(int index);
 
+    // Restore device settings and data
+    void restore();
+
+    // Getters
+    int getBreathPace();
+    int getChallengeLevel();
     int getRecordingLength();
     float getRecordingCoherenceScore();
     float getRecordingAchievementScore();
-
     vector<float> getRecordingDataPoints();
 
-    // recording save
-    void saveRecording();
-
-    void deleteLog(int index);
-    void restore();
-
-    int getIndicator();
-
+    // Settters
+    void setBreathPace(int bp);
+    void setChallengeLevel(int cl);
 
 private:
     vector<Log*> logs;
     Recording recording;
 
-    MenuState state;
+    DeviceState state;
 
     int breathPace;
     int challengeLevel;

@@ -44,7 +44,6 @@ private:
     medium and high), average coherence, length of session, achievement score, entire
     HRV graph
      */
-
 };
 
 #endif // LOG_H

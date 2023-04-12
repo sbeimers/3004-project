@@ -26,9 +26,9 @@ SOURCES += \
 HEADERS += \
     consts.h \
     device.h \
+    devicestate.h \
     log.h \
     mainwindow.h \
-    menustate.h \
     qcustomplot.h \
     recording.h
 
