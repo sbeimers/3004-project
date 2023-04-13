@@ -74,10 +74,17 @@ void Device::saveRecording() {
     QDateTime date = QDateTime::currentDateTime();
     QString formattedTime = date.toString("dd.MM.yyyy hh:mm:ss");
 
-    //calculates the percentage of time spent in each indicator state
-    float lowPercentage = (float(lowIndicatorTime) / recording.getLengthOfSession()) * 100;
-    float medPercentage = (float(mediumIndicatorTime) / recording.getLengthOfSession()) * 100;
-    float highPercentage = (float(highIndicatorTime) / recording.getLengthOfSession()) * 100;
+
+
+    //calculates the percentage of time spent in each indicator
+    float lowPercentage = 0;
+    float medPercentage = 0;
+    float highPercentage = 0;
+    if(recording.getLengthOfSession() != 0){ //avoids a 0/0 division due to abrupt session end
+        lowPercentage = (float(lowIndicatorTime) / recording.getLengthOfSession()) * 100;
+        medPercentage = (float(mediumIndicatorTime) / recording.getLengthOfSession()) * 100;
+        highPercentage = (float(highIndicatorTime) / recording.getLengthOfSession()) * 100;
+    }
 
     // Create log and add to log vector, this persists as long as the device turns
     // on and off and only get erased when the program ends
