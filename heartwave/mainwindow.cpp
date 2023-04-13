@@ -46,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
     connect(batteryTimer, &QTimer::timeout, this, &MainWindow::updateBatteryLevel);
     batteryTimer->start(15000);
+
+    ui->applyToSkinCheckbox->setChecked(true); //set the apply to skin checkbox state to checked
 }
 
 MainWindow::~MainWindow()
@@ -177,11 +179,11 @@ void MainWindow::displayLog(int logNum){
     Log* currentLog = device.getLogs().at(logNum);
 
     // Update ui details with log info
-    ui->logDetailBox->setTitle("Log summary: " + currentLog->getDate());
-    ui->detailChallengeLevelLabel->setText(QString("Challenge level: ") + QString::number(currentLog->getChallengeLevel()+1));
-    ui->detailSesLenLabel->setText(QString("Session length: ") + QString::number(currentLog->getLengthOfSession() )+ QString(" s"));
-    ui->detailAchScoreLabel->setText(QString("Achievement score: ") + QString::number(currentLog->getAchievementScore()));
-    ui->detailAvgCoherenceLabel->setText(QString("Average coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
+    ui->logDetailBox->setTitle("Log Summary: " + currentLog->getDate());
+    ui->detailChallengeLevelLabel->setText(QString("Challenge Level: ") + QString::number(currentLog->getChallengeLevel()+1));
+    ui->detailSesLenLabel->setText(QString("Session Length: ") + QString::number(currentLog->getLengthOfSession() )+ QString(" s"));
+    ui->detailAchScoreLabel->setText(QString("Achievement Score: ") + QString::number(currentLog->getAchievementScore()));
+    ui->detailAvgCoherenceLabel->setText(QString("Average Coherence: ") + QString::number(currentLog->getAverageCoherence(), 'f', 1));
     ui->detailLowLabel->setText(QString("Low: ") + QString::number(currentLog->getLowPercentage(), 'f', 1) + QString("%"));
     ui->detailMedLabel->setText(QString("Med: ") + QString::number(currentLog->getMediumPercentage(), 'f', 1) + QString("%"));
     ui->detailHighLabel->setText(QString("High: ") + QString::number(currentLog->getHighPercentage(), 'f', 1) + QString("%"));
