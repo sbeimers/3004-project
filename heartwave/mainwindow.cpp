@@ -46,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(breathTimer, &QTimer::timeout, this, &MainWindow::updateBreathPace);
     connect(batteryTimer, &QTimer::timeout, this, &MainWindow::updateBatteryLevel);
     batteryTimer->start(15000);
+
+    ui->applyToSkinCheckbox->setChecked(true); //set the apply to skin checkbox state to checked
 }
 
 MainWindow::~MainWindow()
