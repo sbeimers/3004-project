@@ -49,13 +49,13 @@ vector<float> Recording::getFiveLastestPlotPoints() {
 // Adds the next 5 plot points to the class vector
 void Recording::addToPlotPoints(){
     for (int x = lengthOfSession - 5; x < lengthOfSession; x++){
-        plotPoints.push_back(dataPoints->at(x));
+        plotPoints.push_back(dataPoints->at(x % dataPoints->size()));
     }
 }
 
 //this function appends the newest coherence average/score to coherenceScores.
 void Recording::addToCoherenceScores(){
-    coherenceScores.push_back(coherenceDataValues->at(coherenceScores.size()));
+    coherenceScores.push_back(coherenceDataValues->at(coherenceScores.size() % coherenceDataValues->size()));
 }
 
 //returns the average coherence based off of all coherence scores during the session
