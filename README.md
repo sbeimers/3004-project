@@ -142,6 +142,6 @@ The project is organized as follows:
 [contributors-shield2]: https://img.shields.io/static/v1?label=Contributor&message=Zara_Ali&color=afff75&style=for-the-badge
 [contributors-url2]: https://github.com/zaraahlie
 [contributors-shield3]: https://img.shields.io/static/v1?label=Contributor&message=Elias_Hawa&color=afff75&style=for-the-badge
-[contributors-url3]: https://github.com/MathyouMB
+[contributors-url3]: https://github.com/EliasJRH
 [contributors-shield4]: https://img.shields.io/static/v1?label=Contributor&message=Victor_Li&color=afff75&style=for-the-badge
 [contributors-url4]: https://github.com/VictorLi5611
