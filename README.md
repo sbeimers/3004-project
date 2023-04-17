@@ -37,6 +37,8 @@
 
 This project was created by Sebastian Beimers, Elias Hawa, Zara Ali and Victor Li for Carleton University's COMP 3004 Winter 2023 course, taught by Vojislav Radonjic.
 
+<a href="https://www.youtube.com/watch?v=6Z4Z4Z4Z4Z4">Click here</a> to view our project demo video.
+
 ## Team Members Contributions
 For more information on the team members' contributions, please refer to the <a href="https://github.com/sbeimers/3004-project/pulls?page=1&q=is%3Apr+is%3Aclosed+">pull requests</a>.
 
@@ -62,7 +64,7 @@ For more information on the team members' contributions, please refer to the <a 
 ### Elias Hawa
 - Worked on UI design and implementation including handling of device state and button handlers
 - Worked on initial system architecture design 
-- Implemented plot points, coherence, and achievement scores calculation in Recording class
+- Implemented functionality for device to update every 5 seconds (update functions in MainWindow, Device, and Recording)
 - Worked on log history and deletion functionality
 - Worked on application to skin functionality
 
