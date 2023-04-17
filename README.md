@@ -60,9 +60,11 @@ For more information on the team members' contributions, please refer to the <a 
 - Created all sequence diagrams 
 
 ### Elias Hawa
-- Worked on UI design and implementation including handling of device state
+- Worked on UI design and implementation including handling of device state and button handlers
 - Worked on initial system architecture design 
 - Implemented plot points, coherence, and achievement scores calculation in Recording class
+- Worked on log history and deletion functionality
+- Worked on application to skin functionality
 
 ### Victor Li
 - Worked on initial system architecture design 
