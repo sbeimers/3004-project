@@ -14,7 +14,7 @@
   <ol>
     <li><a href="#about-the-project">About the Project</a></li>
     <li>
-      <a href="#team-members-contributions">Team Member Contrubutions</a>
+      <a href="#team-members-contributions">Team Member Contributions</a>
       <ul>
         <li><a href="#sebastian-beimers">Sebastian Beimers</a></li>
         <li><a href="#zara-ali">Zara Ali</a></li>
@@ -29,7 +29,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#file-orgainization">File Orgainization</a></li>
+    <li><a href="#file-organization">File Organization</a></li>
   </ol>
 </details>
 
@@ -75,7 +75,7 @@ For more information on the team members' contributions, please refer to the <a 
 - created all use cases and the use case diagrams
 - created uml diagrams for the system architecture and the class diagram
 - created the traceability matrix 
-- created the readme file
+- created the README file
 
 ## Getting Started
 To get a local copy of this project up and running, please follow the steps below.
@@ -102,7 +102,7 @@ To get a local copy of this project up and running, please follow the steps belo
 **Congratulations! You are now running our project on your VM!**
 <br />
 
-## File Orgainization
+## File Organization
 The project is organized as follows:
 ```
 3004-project
