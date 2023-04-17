@@ -137,7 +137,7 @@ The project is organized as follows:
 
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield1]: https://img.shields.io/static/v1?label=Contributor&message=Sebastian_Beimier&color=afff75&style=for-the-badge
+[contributors-shield1]: https://img.shields.io/static/v1?label=Contributor&message=Sebastian_Beimers&color=afff75&style=for-the-badge
 [contributors-url1]: https://github.com/sbeimers
 [contributors-shield2]: https://img.shields.io/static/v1?label=Contributor&message=Zara_Ali&color=afff75&style=for-the-badge
 [contributors-url2]: https://github.com/zaraahlie
