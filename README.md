@@ -64,7 +64,7 @@ For more information on the team members' contributions, please refer to the <a 
 ### Elias Hawa
 - Worked on UI design and implementation including handling of device state and button handlers
 - Worked on initial system architecture design 
-- Implemented plot points, coherence, and achievement scores calculation in Recording class
+- Implemented functionality for device to update every 5 seconds (update functions in MainWindow, Device, and Recording)
 - Worked on log history and deletion functionality
 - Worked on application to skin functionality
 
